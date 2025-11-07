@@ -66,5 +66,5 @@
     "explorer.fileNesting.patterns": {
         "*.sln": "*.csproj"
     },
-    "dotnet.defaultSolution": "typing-legends.sln"
+    "dotnet.defaultSolution": "typing-legends.slnx"
 }
