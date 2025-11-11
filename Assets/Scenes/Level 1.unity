@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b476b74c061c2748bd11dcd4d15435d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Typer
-  wordbank: {fileID: 0}
+  wordbank: {fileID: 2072567512}
   wordOutput: {fileID: 1081986832}
   pointOutput: {fileID: 1394781970}
   timerOutput: {fileID: 789694824}
