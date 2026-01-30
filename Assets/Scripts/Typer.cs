@@ -76,6 +76,8 @@ public class Typer : MonoBehaviour
         UpdateFoodDisplay();
         ResetTimer();
         AddFood(3);
+
+        ScoreKeeper.Set(score);
     }
 
     private void Update()
@@ -187,6 +189,7 @@ public class Typer : MonoBehaviour
     private void AddPoint(int amount)
     {
         score += amount;
+        ScoreKeeper.Set(score);
         UpdatePointDisplay();
     }
 
@@ -231,6 +234,7 @@ public class Typer : MonoBehaviour
         {
             // Fallback behavior if no health system is assigned
             isGameOver = true;
+            ScoreKeeper.Set(score);
             if (gameOverScreen != null) gameOverScreen.Show(score);
             else ReturnToMainMenu();
             return;
@@ -253,6 +257,7 @@ public class Typer : MonoBehaviour
 
     private void Win()
     {
+        ScoreKeeper.Set(score);
         if (gameWinScreen != null)
         {
             gameWinScreen.Show(score);

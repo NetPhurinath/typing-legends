@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -21,6 +22,20 @@ public class PlayerHealth : MonoBehaviour
     private void Awake()
     {
         if (typer == null) typer = FindObjectOfType<Typer>();
+        if (gameOverScreen == null)
+        {
+            var endScreens = Object.FindObjectsByType<GameOverScreen>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var screen in endScreens)
+            {
+                if (screen is GameWinScreen) continue;
+                gameOverScreen = screen;
+                break;
+            }
+
+            if (gameOverScreen == null)
+                gameOverScreen = Object.FindFirstObjectByType<GameOverScreen>(FindObjectsInactive.Include);
+        }
+
         if (maxHealth < 1) maxHealth = 1;
         currentHealth = maxHealth;
         HealthChanged?.Invoke(currentHealth, maxHealth);
@@ -67,6 +82,9 @@ public class PlayerHealth : MonoBehaviour
         {
             int points = 0;
             if (typer != null) points = typer.Score;
+            else points = ScoreKeeper.LastScore;
+
+            ScoreKeeper.Set(points);
             gameOverScreen.Show(points);
         }
         else
