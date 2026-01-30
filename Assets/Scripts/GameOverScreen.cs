@@ -3,21 +3,42 @@ using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameOverScreen : MonoBehaviour
+// =================================================================================================
+// GameOver / Win Screen (ตัวจบเกม)
+// - ไฟล์นี้คือ “แกนหลัก” ของหน้าจอ GameOver/Win: เปิด/ปิดหน้าจอ, pause เวลา, ตั้งหัวข้อ, ส่งคะแนนไปแสดง
+// - โค้ดถูกแยกเป็นหลายไฟล์ด้วย partial class เพื่อแก้ง่าย:
+//   - GameOverScreen.cs            : โครงหลัก + fields + Show/Hide
+//   - GameOverScreen.Wiring.cs     : Auto-wire หา Text/Buttons จากลูก ๆ ของหน้าจอนี้
+//   - GameOverScreen.Points.cs     : กติกาการแสดงคะแนน (POINTS)
+//   - GameOverScreen.Actions.cs    : ปุ่ม Restart/Next/MainMenu และการโหลด Scene
+//
+// จุดที่แก้บ่อย (แก้แล้วได้อะไร):
+// - gameOverTitle / winTitle      : เปลี่ยนข้อความหัวข้อ
+// - pointsFormat                  : เปลี่ยนรูปแบบคะแนน (เฉพาะกรณีที่ไม่มี label "POINTS :" ใน UI)
+// - winSceneName                  : ตอนชนะแล้วกด Next จะไปฉากไหน
+// - restartButtonLabelGameOver/Win: เปลี่ยนชื่อปุ่ม Restart/Next
+// =================================================================================================
+public partial class GameOverScreen : MonoBehaviour
 {
     [Header("Text (optional)")]
+    // titleText: ข้อความหัวข้อ (เช่น GAME OVER / YOU WIN)
     [SerializeField] private TMP_Text titleText;
+    // pointsText: ข้อความคะแนน (ถ้าใน UI มี label "POINTS :" แยกต่างหาก ระบบจะไปอัปเดตที่ label นั้นแทน)
     [SerializeField] private TMP_Text pointsText;
 
     [Header("Text (Legacy UI Text) - optional")]
+    // รองรับ UI Text แบบเก่า (ไม่ใช่ TMP) เผื่อฉากเก่าบางฉากยังใช้
     [SerializeField] private Text titleTextLegacy;
     [SerializeField] private Text pointsTextLegacy;
 
     [Header("Score Source")]
+    // true = เปิดหน้าจอเมื่อไหร่ (OnEnable) จะดึง ScoreKeeper.LastScore มาแสดงให้อัตโนมัติ
     [SerializeField] private bool autoFetchScoreOnEnable = true;
+    // true = ถ้าไม่มี pointsText/pointsTextLegacy ระบบจะสร้าง Text ใหม่ให้เองเพื่อให้คะแนนไม่หาย
     [SerializeField] private bool autoCreatePointsTextIfMissing = true;
 
     [Header("Score Display")]
+    // true = ถ้าจำเป็นจะพยายามปรับสไตล์คะแนนให้เข้ากับ titleText (สี/ฟอนต์/ตำแหน่ง)
     [SerializeField] private bool forcePointsStyleFromTitle = true;
 
     [Header("Titles")]
@@ -25,9 +46,13 @@ public class GameOverScreen : MonoBehaviour
     [SerializeField] private string winTitle = "YOU WIN";
 
     [Header("Score Text")]
+    // ใช้เฉพาะกรณีที่ใน UI ไม่มี label "POINTS :" แยกไว้
+    // - ถ้ามี {0} จะ string.Format ใส่คะแนนให้ เช่น "{0} POINTS"
+    // - ถ้าไม่มี {0} จะเอาคะแนนไปต่อท้าย เช่น "POINTS :" -> "POINTS : 250"
     [SerializeField] private string pointsFormat = "{0} POINTS";
 
     [Header("Win (optional)")]
+    // ตอนชนะแล้วกด Next จะโหลดฉากนี้ (ต้องอยู่ใน Scenes In Build)
     [SerializeField] private string winSceneName = "LevelSelection";
 
     [Header("Buttons")]
@@ -45,217 +70,16 @@ public class GameOverScreen : MonoBehaviour
     private bool restartHooked;
     private bool mainMenuHooked;
 
-    private void SetRestartButtonLabel(bool isWin)
-    {
-        if (restartButton == null) return;
 
-        string label = isWin ? restartButtonLabelWin : restartButtonLabelGameOver;
-        if (string.IsNullOrWhiteSpace(label)) return;
-
-        var tmp = restartButton.GetComponentInChildren<TMP_Text>(true);
-        if (tmp != null)
-        {
-            tmp.text = label;
-            return;
-        }
-
-        var legacy = restartButton.GetComponentInChildren<Text>(true);
-        if (legacy != null)
-        {
-            legacy.text = label;
-        }
-    }
-
-    private void TryAutoWire()
-    {
-        var canvas = GetComponentInParent<Canvas>();
-
-        // Prefer wiring within this screen object first (avoids grabbing unrelated HUD texts elsewhere).
-        var localTmpTexts = GetComponentsInChildren<TMP_Text>(true);
-        var localLegacyTexts = GetComponentsInChildren<Text>(true);
-        var localButtons = GetComponentsInChildren<Button>(true);
-
-        if (titleText == null || pointsText == null)
-        {
-            var texts = (localTmpTexts != null && localTmpTexts.Length > 0)
-                ? localTmpTexts
-                : (canvas != null ? canvas.GetComponentsInChildren<TMP_Text>(true) : GetComponentsInChildren<TMP_Text>(true));
-            if (texts != null && texts.Length > 0)
-            {
-                if (titleText == null)
-                {
-                    foreach (var t in texts)
-                    {
-                        var n = t.name.ToLowerInvariant();
-                        if (n.Contains("title") || n.Contains("result") || n.Contains("status"))
-                        {
-                            titleText = t;
-                            break;
-                        }
-                    }
-
-                    if (titleText == null && texts.Length >= 2) titleText = texts[0];
-                }
-
-                if (pointsText == null)
-                {
-                    foreach (var t in texts)
-                    {
-                        var n = t.name.ToLowerInvariant();
-                        if ((n.Contains("point") || n.Contains("score")) && t.GetComponentInParent<Button>(true) == null)
-                        {
-                            pointsText = t;
-                            break;
-                        }
-                    }
-
-                    if (pointsText == null)
-                    {
-                        // Fallback: prefer a non-button text and not the same as titleText
-                        foreach (var t in texts)
-                        {
-                            if (t == null) continue;
-                            if (t == titleText) continue;
-                            if (t.GetComponentInParent<Button>(true) != null) continue;
-                            pointsText = t;
-                            break;
-                        }
-
-                        if (pointsText == null)
-                        {
-                            if (texts.Length == 1) pointsText = texts[0];
-                            else if (texts.Length >= 2) pointsText = texts[1];
-                        }
-                    }
-                }
-            }
-        }
-
-        if (restartButton == null || mainMenuButton == null)
-        {
-            var buttons = (localButtons != null && localButtons.Length > 0)
-                ? localButtons
-                : (canvas != null ? canvas.GetComponentsInChildren<Button>(true) : GetComponentsInChildren<Button>(true));
-            if (buttons != null && buttons.Length > 0)
-            {
-                if (restartButton == null)
-                {
-                    foreach (var b in buttons)
-                    {
-                        var n = b.name.ToLowerInvariant();
-                        if (n.Contains("restart") || n.Contains("again") || n.Contains("next"))
-                        {
-                            restartButton = b;
-                            break;
-                        }
-                    }
-                }
-
-                if (mainMenuButton == null)
-                {
-                    foreach (var b in buttons)
-                    {
-                        var n = b.name.ToLowerInvariant();
-                        if (n.Contains("menu") || n.Contains("main"))
-                        {
-                            mainMenuButton = b;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        if (titleTextLegacy == null || pointsTextLegacy == null)
-        {
-            var legacyTexts = (localLegacyTexts != null && localLegacyTexts.Length > 0)
-                ? localLegacyTexts
-                : (canvas != null ? canvas.GetComponentsInChildren<Text>(true) : GetComponentsInChildren<Text>(true));
-            if (legacyTexts != null && legacyTexts.Length > 0)
-            {
-                if (titleTextLegacy == null)
-                {
-                    foreach (var t in legacyTexts)
-                    {
-                        if (t == null) continue;
-                        if (t.GetComponentInParent<Button>(true) != null) continue;
-
-                        var n = t.name.ToLowerInvariant();
-                        if (n == "text (legacy)" || n.Contains("title") || n.Contains("result") || n.Contains("status") || n.Contains("gameover"))
-                        {
-                            titleTextLegacy = t;
-                            break;
-                        }
-                    }
-
-                    if (titleTextLegacy == null)
-                    {
-                        foreach (var t in legacyTexts)
-                        {
-                            if (t == null) continue;
-                            if (t.GetComponentInParent<Button>(true) != null) continue;
-                            titleTextLegacy = t;
-                            break;
-                        }
-                    }
-                }
-
-                if (pointsTextLegacy == null)
-                {
-                    // Best match: same parent container as title.
-                    if (titleTextLegacy != null)
-                    {
-                        var titleParent = titleTextLegacy.transform.parent;
-                        foreach (var t in legacyTexts)
-                        {
-                            if (t == null) continue;
-                            if (t == titleTextLegacy) continue;
-                            if (t.GetComponentInParent<Button>(true) != null) continue;
-                            if (t.transform.parent != titleParent) continue;
-
-                            var n = t.name.ToLowerInvariant();
-                            if (n == "point" || n.Contains("point") || n.Contains("score"))
-                            {
-                                pointsTextLegacy = t;
-                                break;
-                            }
-                        }
-                    }
-
-                    foreach (var t in legacyTexts)
-                    {
-                        if (t == null) continue;
-                        if (t.GetComponentInParent<Button>(true) != null) continue;
-
-                        var n = t.name.ToLowerInvariant();
-                        if ((n == "point" || n.Contains("point") || n.Contains("score")) && t != titleTextLegacy)
-                        {
-                            pointsTextLegacy = t;
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        EnsureButtonHooks();
-    }
-
-    private void EnsureButtonHooks()
-    {
-        if (restartButton != null && !restartHooked)
-        {
-            restartButton.onClick.AddListener(OnRestartPressed);
-            restartHooked = true;
-        }
-
-        if (mainMenuButton != null && !mainMenuHooked)
-        {
-            mainMenuButton.onClick.AddListener(OnMainMenuPressed);
-            mainMenuHooked = true;
-        }
-    }
-
+    /// <summary>
+    /// Awake: รันครั้งแรกตอนสร้าง object
+    /// - ปรับค่า winSceneName กันฉากเก่าที่ serialize ค่าเดิมผิด
+    /// - เรียก TryAutoWire/EnsurePointsText เพื่อให้ reference พร้อม
+    /// - ปิดหน้าจอไว้ก่อน (gameObject.SetActive(false))
+    ///
+    /// แก้เมธอดนี้แล้วได้อะไร:
+    /// - เปลี่ยนค่า default/migration, เปลี่ยนพฤติกรรมเริ่มต้นของหน้าจอ
+    /// </summary>
     private void Awake()
     {
         // Migration / safety: older scenes may have serialized the previous default.
@@ -280,6 +104,15 @@ public class GameOverScreen : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// OnEnable: รันทุกครั้งที่หน้าจอนี้ถูกเปิด (SetActive(true))
+    /// - auto-wire + ensure text/button พร้อม
+    /// - ถ้าไม่เคยเรียก Show(points) มาก่อน จะดึง ScoreKeeper.LastScore มาแสดงแทน
+    ///   (ช่วยกรณีเปิดหน้าจอผ่าน inspector/trigger โดยไม่ได้ส่งคะแนน)
+    ///
+    /// แก้เมธอดนี้แล้วได้อะไร:
+    /// - คุมว่าเปิดหน้าจอแล้วจะแสดงคะแนนจากไหน/เวลาไหน
+    /// </summary>
     private void OnEnable()
     {
         TryAutoWire();
@@ -304,100 +137,46 @@ public class GameOverScreen : MonoBehaviour
         UpdatePointsText(lastShownPoints);
     }
 
+    /// <summary>
+    /// OnDisable: รันเมื่อหน้าจอนี้ถูกปิด (SetActive(false))
+    /// - รีเซ็ต flag เพื่อให้การเปิดครั้งถัดไปสามารถ auto-fetch คะแนนได้
+    /// </summary>
     private void OnDisable()
     {
         // Next time we open, allow auto-fetch to populate if Show() isn't called.
         hasExplicitPoints = false;
     }
 
-    private void UpdatePointsText(int points)
-    {
-        EnsurePointsText();
-        if (pointsText == null && pointsTextLegacy == null) return;
 
-        EnsurePointsTextStyle();
 
-        string text;
-        try { text = string.Format(pointsFormat, points); }
-        catch { text = points + " POINTS"; }
-
-        if (pointsText != null)
-        {
-            if (!pointsText.gameObject.activeSelf) pointsText.gameObject.SetActive(true);
-            if (!pointsText.enabled) pointsText.enabled = true;
-            var c = pointsText.color;
-            if (c.a <= 0.01f) pointsText.color = new Color(c.r, c.g, c.b, 1f);
-            pointsText.text = text;
-        }
-
-        if (pointsTextLegacy != null)
-        {
-            if (!pointsTextLegacy.gameObject.activeSelf) pointsTextLegacy.gameObject.SetActive(true);
-            if (!pointsTextLegacy.enabled) pointsTextLegacy.enabled = true;
-            var c = pointsTextLegacy.color;
-            if (c.a <= 0.01f) pointsTextLegacy.color = new Color(c.r, c.g, c.b, 1f);
-            pointsTextLegacy.text = text;
-        }
-    }
-
-    private void EnsurePointsTextStyle()
-    {
-        if (!forcePointsStyleFromTitle) return;
-
-        // If the scene already has a "Point" text, make sure it's positioned & styled to be visible.
-        if (pointsText != null && titleText != null)
-        {
-            var titleRt = titleText.rectTransform;
-            var rt = pointsText.rectTransform;
-
-            if (rt.localScale.sqrMagnitude < 0.0001f) rt.localScale = Vector3.one;
-
-            rt.anchorMin = titleRt.anchorMin;
-            rt.anchorMax = titleRt.anchorMax;
-            rt.pivot = titleRt.pivot;
-            if (rt.sizeDelta == Vector2.zero) rt.sizeDelta = titleRt.sizeDelta;
-
-            // If points is sitting on top of the title (common when manually duplicated), move it below.
-            if (Vector2.Distance(rt.anchoredPosition, titleRt.anchoredPosition) < 1f)
-                rt.anchoredPosition = titleRt.anchoredPosition + new Vector2(0f, -Mathf.Max(40f, titleRt.sizeDelta.y * 0.9f));
-
-            pointsText.font = titleText.font;
-            pointsText.fontSize = Mathf.Max(18f, titleText.fontSize * 0.6f);
-            pointsText.color = titleText.color;
-            pointsText.alignment = titleText.alignment;
-            pointsText.raycastTarget = false;
-        }
-
-        if (pointsTextLegacy != null && titleTextLegacy != null)
-        {
-            var titleRt = (RectTransform)titleTextLegacy.transform;
-            var rt = (RectTransform)pointsTextLegacy.transform;
-
-            if (rt.localScale.sqrMagnitude < 0.0001f) rt.localScale = Vector3.one;
-
-            rt.anchorMin = titleRt.anchorMin;
-            rt.anchorMax = titleRt.anchorMax;
-            rt.pivot = titleRt.pivot;
-            if (rt.sizeDelta == Vector2.zero) rt.sizeDelta = titleRt.sizeDelta;
-
-            if (Vector2.Distance(rt.anchoredPosition, titleRt.anchoredPosition) < 1f)
-                rt.anchoredPosition = titleRt.anchoredPosition + new Vector2(0f, -Mathf.Max(40f, titleRt.sizeDelta.y * 0.9f));
-
-            pointsTextLegacy.font = titleTextLegacy.font != null ? titleTextLegacy.font : Resources.GetBuiltinResource<Font>("Arial.ttf");
-            pointsTextLegacy.fontSize = Mathf.Max(18, Mathf.RoundToInt(titleTextLegacy.fontSize * 0.6f));
-            pointsTextLegacy.color = titleTextLegacy.color;
-            pointsTextLegacy.alignment = titleTextLegacy.alignment;
-            pointsTextLegacy.raycastTarget = false;
-        }
-    }
-
-    // Show Game Over with points and pause gameplay
+    // Show: เปิดหน้าจอ GameOver พร้อมคะแนน (และหยุดเวลาเกม)
+    /// <summary>
+    /// Show(points): API แบบสั้นสำหรับ “แพ้”
+    /// - เทียบเท่า Show(points, false)
+    ///
+    /// แก้เมธอดนี้แล้วได้อะไร:
+    /// - ถ้าอยากให้เรียก Show(points) แล้วเป็นโหมดอื่น ก็ปรับที่นี่ได้
+    /// </summary>
     public void Show(int points)
     {
         Show(points, false);
     }
 
-    // Show Win/Game Over with points and pause gameplay
+    // Show(points, isWin): ใช้ร่วมกันทั้งแพ้/ชนะ
+    // - isWin=false => GAME OVER + ปุ่มเป็น Restart
+    // - isWin=true  => YOU WIN    + ปุ่มเป็น Next และโหลด winSceneName
+    /// <summary>
+    /// Show(points, isWin): เปิดหน้าจอจบเกม พร้อมคะแนน และ pause เกม
+    /// ผลที่เกิดขึ้น:
+    /// - ตั้งสถานะ showingWin
+    /// - บันทึกคะแนนลง ScoreKeeper
+    /// - ตั้ง title และข้อความคะแนน
+    /// - เปิดหน้าจอ + backgroundOverlay (ถ้ามี)
+    /// - pause เกมด้วย Time.timeScale = 0 (และจำค่าเดิมไว้ใน previousTimeScale)
+    ///
+    /// แก้เมธอดนี้แล้วได้อะไร:
+    /// - เปลี่ยน UI ตอนชนะ/แพ้, เปลี่ยนเวลาที่ pause, หรือเพิ่มเอฟเฟกต์ก่อนแสดงผล
+    /// </summary>
     public void Show(int points, bool isWin)
     {
         TryAutoWire();
@@ -426,107 +205,13 @@ public class GameOverScreen : MonoBehaviour
         Time.timeScale = 0f;
     }
 
-    private void EnsurePointsText()
-    {
-        if (pointsText != null || pointsTextLegacy != null) return;
-        if (!autoCreatePointsTextIfMissing) return;
-
-        // Avoid creating duplicates if a child already exists.
-        var existing = transform.Find("PointsText");
-        if (existing != null)
-        {
-            pointsText = existing.GetComponent<TMP_Text>();
-            if (pointsText != null) return;
-
-            pointsTextLegacy = existing.GetComponent<Text>();
-            if (pointsTextLegacy != null) return;
-        }
-
-        // Prefer using titleText as a template.
-        if (titleText != null)
-        {
-            var parent = titleText.transform.parent != null ? titleText.transform.parent : transform;
-            var go = new GameObject("PointsText", typeof(RectTransform), typeof(TMP_Text));
-            go.transform.SetParent(parent, false);
-
-            // Keep it near the title in draw order.
-            go.transform.SetSiblingIndex(titleText.transform.GetSiblingIndex() + 1);
-
-            var tmp = go.GetComponent<TMP_Text>();
-            var rt = (RectTransform)go.transform;
-
-            var titleRt = titleText.rectTransform;
-            rt.anchorMin = titleRt.anchorMin;
-            rt.anchorMax = titleRt.anchorMax;
-            rt.pivot = titleRt.pivot;
-            rt.sizeDelta = titleRt.sizeDelta;
-            rt.anchoredPosition = titleRt.anchoredPosition + new Vector2(0f, -Mathf.Max(40f, titleRt.sizeDelta.y * 0.9f));
-
-            tmp.font = titleText.font;
-            tmp.fontSize = Mathf.Max(18f, titleText.fontSize * 0.6f);
-            tmp.color = titleText.color;
-            tmp.alignment = titleText.alignment;
-            tmp.raycastTarget = false;
-
-            pointsText = tmp;
-            EnsurePointsTextStyle();
-            return;
-        }
-
-        if (titleTextLegacy != null)
-        {
-            var parent = titleTextLegacy.transform.parent != null ? titleTextLegacy.transform.parent : transform;
-            var go = new GameObject("PointsText", typeof(RectTransform), typeof(Text));
-            go.transform.SetParent(parent, false);
-
-            // Keep it near the title in draw order.
-            go.transform.SetSiblingIndex(titleTextLegacy.transform.GetSiblingIndex() + 1);
-
-            var txt = go.GetComponent<Text>();
-            var rt = (RectTransform)go.transform;
-
-            var titleRt = (RectTransform)titleTextLegacy.transform;
-            rt.anchorMin = titleRt.anchorMin;
-            rt.anchorMax = titleRt.anchorMax;
-            rt.pivot = titleRt.pivot;
-            rt.sizeDelta = titleRt.sizeDelta;
-            rt.anchoredPosition = titleRt.anchoredPosition + new Vector2(0f, -Mathf.Max(40f, titleRt.sizeDelta.y * 0.9f));
-
-            txt.font = titleTextLegacy.font != null ? titleTextLegacy.font : Resources.GetBuiltinResource<Font>("Arial.ttf");
-            txt.fontSize = Mathf.Max(18, Mathf.RoundToInt(titleTextLegacy.fontSize * 0.6f));
-            txt.color = titleTextLegacy.color;
-            txt.alignment = titleTextLegacy.alignment;
-            txt.raycastTarget = false;
-
-            pointsTextLegacy = txt;
-            EnsurePointsTextStyle();
-            return;
-        }
-
-        // Last resort: create a basic legacy Text so something shows.
-        {
-            var go = new GameObject("PointsText", typeof(RectTransform), typeof(Text));
-            go.transform.SetParent(transform, false);
-
-            var txt = go.GetComponent<Text>();
-            var rt = (RectTransform)go.transform;
-            rt.anchorMin = new Vector2(0.5f, 0.5f);
-            rt.anchorMax = new Vector2(0.5f, 0.5f);
-            rt.pivot = new Vector2(0.5f, 0.5f);
-            rt.sizeDelta = new Vector2(400f, 80f);
-            rt.anchoredPosition = new Vector2(0f, 140f);
-
-            txt.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            txt.fontSize = 28;
-            txt.color = Color.white;
-            txt.alignment = TextAnchor.MiddleCenter;
-            txt.raycastTarget = false;
-
-            pointsTextLegacy = txt;
-        }
-    }
-
-    // Hide Game Over and resume time
+    // Hide: ปิดหน้าจอ และคืนค่าเวลาเดิม
+    /// <summary>
+    /// Hide(): ปิดหน้าจอจบเกม และ unpause โดยคืนค่า Time.timeScale
+    ///
+    /// แก้เมธอดนี้แล้วได้อะไร:
+    /// - ถ้าอยากให้ปิดแล้วทำอย่างอื่นต่อ (เช่น เล่นต่อ) สามารถเพิ่ม logic ที่นี่ได้
+    /// </summary>
     public void Hide()
     {
         gameObject.SetActive(false);
@@ -534,32 +219,4 @@ public class GameOverScreen : MonoBehaviour
         Time.timeScale = previousTimeScale;
     }
 
-    // Restart: reload current scene and resume time
-    public void OnRestartPressed()
-    {
-        if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
-        Time.timeScale = previousTimeScale;
-
-        if (showingWin && !string.IsNullOrWhiteSpace(winSceneName))
-        {
-            if (!Application.CanStreamedLevelBeLoaded(winSceneName))
-            {
-                Debug.LogError($"{nameof(GameOverScreen)}: Scene '{winSceneName}' cannot be loaded. Add it to File > Build Profiles/Settings > Scenes In Build.", this);
-                return;
-            }
-            SceneManager.LoadScene(winSceneName);
-            return;
-        }
-
-        var current = SceneManager.GetActiveScene().name;
-        SceneManager.LoadScene(current);
-    }
-
-    // Main menu: go back to main menu scene and resume time
-    public void OnMainMenuPressed()
-    {
-        if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
-        Time.timeScale = previousTimeScale;
-        SceneManager.LoadScene("MainMenu");
-    }
 }
