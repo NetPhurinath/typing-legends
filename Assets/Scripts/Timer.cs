@@ -5,9 +5,15 @@ public class Timer : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI timerText;
     [SerializeField] private GameOverScreen gameOverScreen; // Reference to the pop-up
+    [SerializeField] private Typer typer; // Optional: use current score
     [SerializeField] private float timeRemaining = 60f; // Default to 60 or set in Inspector
 
     private bool isGameOver = false; // Flag to prevent triggering multiple times
+
+    private void Awake()
+    {
+        if (typer == null) typer = FindObjectOfType<Typer>();
+    }
 
     private void Update()
     {
@@ -26,7 +32,8 @@ public class Timer : MonoBehaviour
 
             // Trigger the Game Over screen
             // Pass the score or '0' if you don't calculate points yet
-            gameOverScreen.Show(100);
+            int points = typer != null ? typer.Score : 0;
+            gameOverScreen.Show(points);
         }
 
         // Update the UI text

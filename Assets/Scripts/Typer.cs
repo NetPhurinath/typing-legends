@@ -14,6 +14,7 @@ public class Typer : MonoBehaviour
     }
 
     [SerializeField] private GameOverScreen gameOverScreen = null;
+    [SerializeField] private GameWinScreen gameWinScreen = null;
     [Header("Food Icon")]
     [SerializeField] private GameObject foodIcon;
 
@@ -47,6 +48,26 @@ public class Typer : MonoBehaviour
 
     [Header("Time limit damage")]
     [SerializeField] private int slowWordDamage = 1;
+
+    private void Awake()
+    {
+        if (gameWinScreen == null)
+            gameWinScreen = Object.FindFirstObjectByType<GameWinScreen>(FindObjectsInactive.Include);
+
+        if (gameOverScreen == null)
+        {
+            var endScreens = Object.FindObjectsByType<GameOverScreen>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            foreach (var screen in endScreens)
+            {
+                if (screen is GameWinScreen) continue;
+                gameOverScreen = screen;
+                break;
+            }
+
+            if (gameOverScreen == null)
+                gameOverScreen = Object.FindFirstObjectByType<GameOverScreen>(FindObjectsInactive.Include);
+        }
+    }
 
     private void Start()
     {
@@ -232,6 +253,18 @@ public class Typer : MonoBehaviour
 
     private void Win()
     {
+        if (gameWinScreen != null)
+        {
+            gameWinScreen.Show(score);
+            return;
+        }
+
+        if (gameOverScreen != null)
+        {
+            gameOverScreen.Show(score, true);
+            return;
+        }
+
         SceneManager.LoadScene("Level 2");
     }
 

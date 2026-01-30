@@ -228,6 +228,7 @@ MonoBehaviour:
   pointOutput: {fileID: 1394781970}
   timerOutput: {fileID: 789694824}
   gameOverScreen: {fileID: 0}
+  gameWinScreen: {fileID: 0}
   foodIcon: {fileID: 1480934596}
   maxFood: 3
   healPerFood: 1
@@ -2263,7 +2264,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1081749082
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2299,7 +2300,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6c3a5a68e5375944b8e93978beb0c309, type: 3}
   m_Name: 
   m_EditorClassIdentifier: '::'
+  titleText: {fileID: 0}
   pointsText: {fileID: 1394781970}
+  gameOverTitle: GAME OVER
+  winTitle: YOU WIN
+  pointsFormat: '{0} POINTS'
+  winSceneName: Level 2
+  restartButtonLabelGameOver: Restart
+  restartButtonLabelWin: Next
   restartButton: {fileID: 1879265057}
   mainMenuButton: {fileID: 604558091}
   backgroundOverlay: {fileID: 0}
@@ -2794,7 +2802,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 10 POINTS
+  m_Text: 'POINTS :'
 --- !u!222 &1289339254
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -3040,11 +3048,11 @@ RectTransform:
   - {fileID: 766983546}
   - {fileID: 1394781972}
   - {fileID: 1778011534}
-  - {fileID: 1081749082}
   - {fileID: 1208190992}
   - {fileID: 1317908738}
   - {fileID: 1960557104}
   - {fileID: 1480934597}
+  - {fileID: 1081749082}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -3936,9 +3944,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11500000, guid: 91c7063e86008b24caae6a90ad62f40d, type: 3}
+      - m_Target: {fileID: 903262877}
         m_TargetAssemblyTypeName: UnityEditor.MonoScript, UnityEditor.CoreModule
-        m_MethodName: set_name
+        m_MethodName: 
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

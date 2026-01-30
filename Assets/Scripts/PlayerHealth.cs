@@ -20,6 +20,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Awake()
     {
+        if (typer == null) typer = FindObjectOfType<Typer>();
         if (maxHealth < 1) maxHealth = 1;
         currentHealth = maxHealth;
         HealthChanged?.Invoke(currentHealth, maxHealth);

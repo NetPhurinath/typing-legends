@@ -20,6 +20,7 @@ public class MonsterHealth : MonoBehaviour
 
  private void Awake()
  {
+ if (typer == null) typer = FindObjectOfType<Typer>();
  if (maxHealth <1) maxHealth =1;
  currentHealth = maxHealth;
  HealthChanged?.Invoke(currentHealth, maxHealth);
@@ -67,7 +68,7 @@ public class MonsterHealth : MonoBehaviour
  {
  int points =0;
  if (typer != null) points = typer.Score;
- gameOverScreen.Show(points);
+ gameOverScreen.Show(points, true);
  }
  else
  {
