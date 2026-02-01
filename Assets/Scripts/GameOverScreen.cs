@@ -55,6 +55,14 @@ public partial class GameOverScreen : MonoBehaviour
     // ตอนชนะแล้วกด Next จะโหลดฉากนี้ (ต้องอยู่ใน Scenes In Build)
     [SerializeField] private string winSceneName = "LevelSelection";
 
+    [Header("Win Navigation (optional)")]
+    // ถ้าเปิดใช้งาน: ตอนชนะแล้วกด Next จะพยายามไปด่านถัดไป (เช่น "Level 1" -> "Level 2")
+    // ถ้าไม่สามารถโหลดด่านถัดไปได้ จะ fallback ไป winSceneName
+    [SerializeField] private bool autoAdvanceToNextLevelOnWin = true;
+
+    // รูปแบบชื่อ scene ของด่านถัดไป (ต้องมี {0}) เช่น "Level {0}"
+    [SerializeField] private string nextLevelSceneNameFormat = "Level {0}";
+
     [Header("Buttons")]
     [SerializeField] private string restartButtonLabelGameOver = "Restart";
     [SerializeField] private string restartButtonLabelWin = "Next";
@@ -188,6 +196,12 @@ public partial class GameOverScreen : MonoBehaviour
 
         ScoreKeeper.Set(points);
 
+        // Persist basic progression on win.
+        // We store "Lv{N}" >= 1 when the current level is completed.
+        // LevelSelection uses Lv(N-1) > 0 to unlock level N.
+        if (isWin)
+            SaveLevelCompletedFlagForCurrentScene();
+
         EnsurePointsText();
 
         SetRestartButtonLabel(isWin);
@@ -203,6 +217,21 @@ public partial class GameOverScreen : MonoBehaviour
         // Pause time so gameplay stops when popup is shown
         previousTimeScale = Time.timeScale;
         Time.timeScale = 0f;
+    }
+
+    private static void SaveLevelCompletedFlagForCurrentScene()
+    {
+        // Parse level number from scene name (e.g. "Level 1" -> 1)
+        var sceneName = SceneManager.GetActiveScene().name;
+        var match = System.Text.RegularExpressions.Regex.Match(sceneName ?? string.Empty, @"\d+");
+        if (!match.Success) return;
+        if (!int.TryParse(match.Value, out int levelNumber)) return;
+        if (levelNumber <= 0) return;
+
+        string key = $"Lv{levelNumber}";
+        int oldValue = PlayerPrefs.GetInt(key, 0);
+        if (oldValue < 1) PlayerPrefs.SetInt(key, 1);
+        PlayerPrefs.Save();
     }
 
     // Hide: ปิดหน้าจอ และคืนค่าเวลาเดิม

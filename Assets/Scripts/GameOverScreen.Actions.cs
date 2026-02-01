@@ -87,8 +87,35 @@ public partial class GameOverScreen
         if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
         Time.timeScale = previousTimeScale;
 
-        if (showingWin && !string.IsNullOrWhiteSpace(winSceneName))
+        if (showingWin)
         {
+            // Win: Next -> try next level (Level N+1) first, then fallback to winSceneName
+            if (autoAdvanceToNextLevelOnWin)
+            {
+                // Most reliable: go to next scene in Build Settings order.
+                int currentIndex = SceneManager.GetActiveScene().buildIndex;
+                int nextIndex = currentIndex + 1;
+                if (currentIndex >= 0 && nextIndex < SceneManager.sceneCountInBuildSettings)
+                {
+                    SceneManager.LoadScene(nextIndex);
+                    return;
+                }
+
+                // Fallback: derive next level name from the current scene name (e.g., "Level 1" -> "Level 2").
+                if (TryGetNextLevelSceneName(out string nextLevelSceneName) &&
+                    Application.CanStreamedLevelBeLoaded(nextLevelSceneName))
+                {
+                    SceneManager.LoadScene(nextLevelSceneName);
+                    return;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(winSceneName))
+            {
+                Debug.LogError($"{nameof(GameOverScreen)}: winSceneName is empty.", this);
+                return;
+            }
+
             if (!Application.CanStreamedLevelBeLoaded(winSceneName))
             {
                 Debug.LogError($"{nameof(GameOverScreen)}: Scene '{winSceneName}' cannot be loaded. Add it to File > Build Profiles/Settings > Scenes In Build.", this);
@@ -100,6 +127,23 @@ public partial class GameOverScreen
 
         var current = SceneManager.GetActiveScene().name;
         SceneManager.LoadScene(current);
+    }
+
+    private bool TryGetNextLevelSceneName(out string nextSceneName)
+    {
+        nextSceneName = null;
+
+        if (string.IsNullOrWhiteSpace(nextLevelSceneNameFormat) || !nextLevelSceneNameFormat.Contains("{0}"))
+            return false;
+
+        var currentSceneName = SceneManager.GetActiveScene().name;
+        var match = System.Text.RegularExpressions.Regex.Match(currentSceneName ?? string.Empty, @"\d+");
+        if (!match.Success) return false;
+        if (!int.TryParse(match.Value, out int currentLevelNumber)) return false;
+        if (currentLevelNumber <= 0) return false;
+
+        nextSceneName = string.Format(nextLevelSceneNameFormat, currentLevelNumber + 1);
+        return !string.IsNullOrWhiteSpace(nextSceneName);
     }
 
     // Main menu: กลับหน้าเมนูหลัก และคืนค่าเวลา
@@ -115,6 +159,15 @@ public partial class GameOverScreen
     {
         if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
         Time.timeScale = previousTimeScale;
-        SceneManager.LoadScene("MainMenu");
+
+        // In this project, the WIN screen's "MENU" should return to the level selection screen.
+        // Reuse winSceneName as the configured target (default: "LevelSelection").
+        var target = string.IsNullOrWhiteSpace(winSceneName) ? "LevelSelection" : winSceneName;
+        if (!Application.CanStreamedLevelBeLoaded(target))
+        {
+            Debug.LogError($"{nameof(GameOverScreen)}: Scene '{target}' cannot be loaded. Add it to Scenes In Build.", this);
+            return;
+        }
+        SceneManager.LoadScene(target);
     }
 }
