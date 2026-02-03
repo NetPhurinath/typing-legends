@@ -17,7 +17,13 @@ public class LevelSelection : MonoBehaviour
 
     private int levelNum;
 
-    private void Start() => UpdateAll();
+    private Button button;
+
+    private void Awake()
+    {
+        button = GetComponent<Button>();
+    }
+
     private void OnEnable() => UpdateAll();
 
     private void UpdateAll()
@@ -25,7 +31,12 @@ public class LevelSelection : MonoBehaviour
         levelNum = ResolveLevelNumber();
         UpdateLevelStatus();
         UpdateLevelImage();
+
+        if (button != null)
+            button.interactable = unlocked;
     }
+
+    private static string LevelKey(int n) => "Lv" + n.ToString();
 
     private int ResolveLevelNumber()
     {
@@ -59,7 +70,7 @@ public class LevelSelection : MonoBehaviour
             return;
         }
 
-        unlocked = PlayerPrefs.GetInt("Lv" + (levelNum - 1).ToString(), 0) > 0;
+        unlocked = PlayerPrefs.GetInt(LevelKey(levelNum - 1), 0) > 0;
     }
 
     private void UpdateLevelImage()
@@ -67,11 +78,11 @@ public class LevelSelection : MonoBehaviour
         if (unlockImage != null)
             unlockImage.gameObject.SetActive(!unlocked);
 
-        bool cleared = levelNum > 0 && PlayerPrefs.GetInt("Lv" + levelNum.ToString(), 0) > 0;
+        bool cleared = levelNum > 0 && PlayerPrefs.GetInt(LevelKey(levelNum), 0) > 0;
         if (clearImage != null)
             clearImage.gameObject.SetActive(cleared);
 
-        Debug.Log($"LevelSelection '{name}': levelNum={levelNum}, unlocked={unlocked}, Lv{levelNum}={PlayerPrefs.GetInt("Lv" + levelNum, 0)}, clearImage={(clearImage ? clearImage.gameObject.activeSelf : false)}");
+        Debug.Log($"LevelSelection '{name}': levelNum={levelNum}, unlocked={unlocked}, Lv{levelNum}={PlayerPrefs.GetInt(LevelKey(levelNum), 0)}, clearImage={(clearImage ? clearImage.gameObject.activeSelf : false)}");
     }
 
     public void PressSelection(string levelName)
