@@ -1235,7 +1235,7 @@ GameObject:
   - component: {fileID: 604558092}
   - component: {fileID: 604558091}
   m_Layer: 5
-  m_Name: GoToMainMenu
+  m_Name: GoToLevelSelection
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1558,7 +1558,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Menu
+  m_text: Level
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: fa28e5483a23d89409d10ce68815e80e, type: 2}
   m_sharedMaterial: {fileID: 1892586903641787009, guid: fa28e5483a23d89409d10ce68815e80e, type: 2}
@@ -2653,6 +2653,8 @@ MonoBehaviour:
   winTitle: YOU WIN
   pointsFormat: '{0} POINTS'
   winSceneName: Level 2
+  autoAdvanceToNextLevelOnWin: 1
+  nextLevelSceneNameFormat: Level {0}
   restartButtonLabelGameOver: Restart
   restartButtonLabelWin: Next
   restartButton: {fileID: 1879265057}

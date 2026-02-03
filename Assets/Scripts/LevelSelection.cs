@@ -1,28 +1,53 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using System.Text.RegularExpressions;
 
 public class LevelSelection : MonoBehaviour
 {
     [SerializeField] private bool unlocked = false;
-    public Image unlockImage;
-    public GameObject[] stars;
-    public Sprite starSprite;
-    public Sprite emptyStarSprite;
 
-    private void Start()
+    [Header("UI")]
+    public Image unlockImage;   // lock overlay (shown when locked)
+    public Image clearImage;    // "CLEAR" overlay (hidden by default)
+
+    [Header("Optional (recommended)")]
+    [Tooltip("If set, used to detect level number for clear/unlock (e.g. 'Level 1').")]
+    [SerializeField] private string levelSceneName;
+
+    private int levelNum;
+
+    private void Start() => UpdateAll();
+    private void OnEnable() => UpdateAll();
+
+    private void UpdateAll()
     {
+        levelNum = ResolveLevelNumber();
         UpdateLevelStatus();
         UpdateLevelImage();
     }
 
+    private int ResolveLevelNumber()
+    {
+        // 1) Prefer explicit scene name (most reliable)
+        if (!string.IsNullOrWhiteSpace(levelSceneName))
+        {
+            var m = Regex.Match(levelSceneName, @"\d+");
+            if (m.Success && int.TryParse(m.Value, out int n) && n > 0) return n;
+        }
+
+        // 2) Fallback: parse from this button object's name
+        {
+            var m = Regex.Match(gameObject.name, @"\d+");
+            if (m.Success && int.TryParse(m.Value, out int n) && n > 0) return n;
+        }
+
+        return 0;
+    }
+
     private void UpdateLevelStatus()
     {
-        string levelNumString = Regex.Match(gameObject.name, @"\d+").Value;
-        if (!int.TryParse(levelNumString, out int levelNum) || levelNum <= 0)
+        if (levelNum <= 0)
         {
             unlocked = false;
             return;
@@ -34,60 +59,24 @@ public class LevelSelection : MonoBehaviour
             return;
         }
 
-        int previousLevelNum = levelNum - 1;
-        if (PlayerPrefs.GetInt("Lv" + previousLevelNum.ToString(), 0) > 0)
-        {
-            unlocked = true;
-        }
+        unlocked = PlayerPrefs.GetInt("Lv" + (levelNum - 1).ToString(), 0) > 0;
     }
 
     private void UpdateLevelImage()
     {
-        if (!unlocked)
-        {
-            if (unlockImage != null)
-                unlockImage.gameObject.SetActive(true);
-            foreach (var s in stars)
-                s.SetActive(false);
-        }
-        else
-        {
-            if (unlockImage != null)
-                unlockImage.gameObject.SetActive(false);
-            foreach (var s in stars)
-                s.SetActive(true);
+        if (unlockImage != null)
+            unlockImage.gameObject.SetActive(!unlocked);
 
-            string levelNumString = Regex.Match(gameObject.name, @"\d+").Value;
-            int starCount = PlayerPrefs.GetInt("Lv" + levelNumString, 0);
-            if (starCount < 0) starCount = 0;
+        bool cleared = levelNum > 0 && PlayerPrefs.GetInt("Lv" + levelNum.ToString(), 0) > 0;
+        if (clearImage != null)
+            clearImage.gameObject.SetActive(cleared);
 
-            // Reset all stars first (prevents stale sprites)
-            if (emptyStarSprite != null)
-            {
-                for (int i = 0; i < stars.Length; i++)
-                {
-                    if (stars[i] == null) continue;
-                    var img = stars[i].GetComponent<Image>();
-                    if (img == null) img = stars[i].GetComponentInChildren<Image>(true);
-                    if (img != null) img.sprite = emptyStarSprite;
-                }
-            }
-
-            for (int i = 0; i < starCount && i < stars.Length; i++)
-            {
-                if (stars[i] == null) continue;
-                var img = stars[i].GetComponent<Image>();
-                if (img == null) img = stars[i].GetComponentInChildren<Image>(true);
-                if (img != null && starSprite != null) img.sprite = starSprite;
-            }
-        }
+        Debug.Log($"LevelSelection '{name}': levelNum={levelNum}, unlocked={unlocked}, Lv{levelNum}={PlayerPrefs.GetInt("Lv" + levelNum, 0)}, clearImage={(clearImage ? clearImage.gameObject.activeSelf : false)}");
     }
 
     public void PressSelection(string levelName)
     {
         if (unlocked)
-        {
             SceneManager.LoadScene(levelName);
-        }
     }
 }
