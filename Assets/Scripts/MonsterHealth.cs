@@ -4,95 +4,102 @@ using Object = UnityEngine.Object;
 
 public class MonsterHealth : MonoBehaviour
 {
- [Header("Health")]
- [SerializeField] private int maxHealth =5;
+    [Header("Health")]
+    [SerializeField] private int maxHealth = 5;
 
- [Header("References (optional)")]
- [SerializeField] private GameOverScreen gameOverScreen;
- [SerializeField] private Typer typer;
+    [Header("References (optional)")]
+    [SerializeField] private GameOverScreen gameOverScreen;
+    [SerializeField] private Typer typer;
 
- private int currentHealth;
- private bool isDead;
+    [Header("UI (optional)")]
+    [SerializeField] private MonsterPortraitUI portraitUI;
 
- public int CurrentHealth => currentHealth;
- public int MaxHealth => maxHealth;
+    private int currentHealth;
+    private bool isDead;
 
- public event Action<int, int> HealthChanged; // current, max
+    public int CurrentHealth => currentHealth;
+    public int MaxHealth => maxHealth;
 
- private void Awake()
- {
- if (typer == null) typer = FindObjectOfType<Typer>();
- if (gameOverScreen == null)
- {
- var endScreens = Object.FindObjectsByType<GameOverScreen>(FindObjectsInactive.Include, FindObjectsSortMode.None);
- if (endScreens != null)
- {
- foreach (var screen in endScreens)
- {
- if (screen == null) continue;
- gameOverScreen = screen;
- break;
- }
- }
+    public event Action<int, int> HealthChanged; // current, max
 
- if (gameOverScreen == null)
- gameOverScreen = Object.FindFirstObjectByType<GameOverScreen>(FindObjectsInactive.Include);
- }
- if (maxHealth <1) maxHealth =1;
- currentHealth = maxHealth;
- HealthChanged?.Invoke(currentHealth, maxHealth);
- }
+    private void Awake()
+    {
+        if (typer == null) typer = FindObjectOfType<Typer>();
 
- public void ResetHealth()
- {
- isDead = false;
- currentHealth = maxHealth;
- HealthChanged?.Invoke(currentHealth, maxHealth);
- }
+        if (portraitUI == null)
+            portraitUI = Object.FindFirstObjectByType<MonsterPortraitUI>(FindObjectsInactive.Include);
 
- public void TakeDamage(int amount)
- {
- if (isDead) return;
- if (amount <=0) return;
+        if (gameOverScreen == null)
+        {
+            var endScreens = Object.FindObjectsByType<GameOverScreen>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+            if (endScreens != null)
+            {
+                foreach (var screen in endScreens)
+                {
+                    if (screen == null) continue;
+                    gameOverScreen = screen;
+                    break;
+                }
+            }
 
- currentHealth -= amount;
- if (currentHealth <=0)
- {
- currentHealth =0;
- HealthChanged?.Invoke(currentHealth, maxHealth);
- Die();
- return;
- }
+            if (gameOverScreen == null)
+                gameOverScreen = Object.FindFirstObjectByType<GameOverScreen>(FindObjectsInactive.Include);
+        }
 
- HealthChanged?.Invoke(currentHealth, maxHealth);
- }
+        if (maxHealth < 1) maxHealth = 1;
+        currentHealth = maxHealth;
+        HealthChanged?.Invoke(currentHealth, maxHealth);
 
- public void Heal(int amount)
- {
- if (isDead) return;
- if (amount <=0) return;
+        if (portraitUI != null) portraitUI.SetIdle();
+    }
 
- currentHealth = Mathf.Min(maxHealth, currentHealth + amount);
- HealthChanged?.Invoke(currentHealth, maxHealth);
- }
+    public void ResetHealth()
+    {
+        isDead = false;
+        currentHealth = maxHealth;
+        HealthChanged?.Invoke(currentHealth, maxHealth);
 
- private void Die()
- {
- isDead = true;
+        if (portraitUI != null) portraitUI.SetIdle();
+    }
 
- // Treat monster death as win/level clear. If there is a UI, show it; otherwise go next level.
- if (gameOverScreen != null)
- {
- int points =0;
- if (typer != null) points = typer.Score;
- else points = ScoreKeeper.LastScore;
+    public void TakeDamage(int amount)
+    {
+        if (isDead) return;
+        if (amount <= 0) return;
 
- ScoreKeeper.Set(points);
- gameOverScreen.Show(points, true);
- }
- else
- {
- Debug.Log("Monster died.");
- }
- }
+        currentHealth -= amount;
+
+        if (portraitUI != null) portraitUI.PlayHit();
+
+        if (currentHealth <= 0)
+        {
+            currentHealth = 0;
+            HealthChanged?.Invoke(currentHealth, maxHealth);
+            Die();
+            return;
+        }
+
+        HealthChanged?.Invoke(currentHealth, maxHealth);
+    }
+
+    private void Die()
+    {
+        isDead = true;
+
+        if (portraitUI != null) portraitUI.PlayDefeat();
+
+        if (gameOverScreen != null)
+        {
+            int points = 0;
+            if (typer != null) points = typer.Score;
+            else points = ScoreKeeper.LastScore;
+
+            ScoreKeeper.Set(points);
+            gameOverScreen.Show(points, true);
+        }
+        else
+        {
+            Debug.Log("Monster died.");
+        }
+    }
 }

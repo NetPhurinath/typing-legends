@@ -238,6 +238,7 @@ MonoBehaviour:
   playerHealth: {fileID: 338472468}
   monsterHealth: {fileID: 766983549}
   monsterDamagePerCorrectWord: 1
+  monsterPortraitUI: {fileID: 0}
   slowWordDamage: 1
 --- !u!4 &203963480
 Transform:
@@ -1873,6 +1874,7 @@ GameObject:
   - component: {fileID: 766983548}
   - component: {fileID: 766983547}
   - component: {fileID: 766983549}
+  - component: {fileID: 766983550}
   m_Layer: 5
   m_Name: BearMonster
   m_TagString: Untagged
@@ -1887,7 +1889,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 766983545}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1897,7 +1899,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 500, y: -170}
-  m_SizeDelta: {x: 331.5, y: 370.5}
+  m_SizeDelta: {x: 357, y: 399}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &766983547
 MonoBehaviour:
@@ -1921,7 +1923,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 9124120133182934757, guid: af8bf3867084967468b2007d4ae4c3a4, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1952,6 +1954,26 @@ MonoBehaviour:
   maxHealth: 5
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
+  portraitUI: {fileID: 0}
+--- !u!114 &766983550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766983545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41dc45aa8ee840f41a87c0bb1f88bcd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterPortraitUI
+  image: {fileID: 766983547}
+  idleSprite: {fileID: 9124120133182934757, guid: af8bf3867084967468b2007d4ae4c3a4, type: 3}
+  hitSprite: {fileID: -5570439924362211302, guid: a9556d4e7ed550e4790b16bea51a937d, type: 3}
+  attackSprite: {fileID: -8932154214229173346, guid: d813d01a1c8bcc84ab64285f87f484d1, type: 3}
+  defeatSprite: {fileID: -5986062837951771335, guid: 878ebde3c1d36f0448c3011e1bc8a08d, type: 3}
+  hitDuration: 0.4
+  attackDuration: 0.5
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
@@ -3451,13 +3473,13 @@ RectTransform:
   - {fileID: 481245539}
   - {fileID: 572717070}
   - {fileID: 1081986831}
-  - {fileID: 338472465}
-  - {fileID: 766983546}
   - {fileID: 1778011534}
   - {fileID: 1208190992}
   - {fileID: 1317908738}
   - {fileID: 1960557104}
   - {fileID: 1480934597}
+  - {fileID: 766983546}
+  - {fileID: 338472465}
   - {fileID: 1081749082}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

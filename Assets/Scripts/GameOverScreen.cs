@@ -5,18 +5,6 @@ using TMPro;
 
 // =================================================================================================
 // GameOver / Win Screen (ตัวจบเกม)
-// - ไฟล์นี้คือ “แกนหลัก” ของหน้าจอ GameOver/Win: เปิด/ปิดหน้าจอ, pause เวลา, ตั้งหัวข้อ, ส่งคะแนนไปแสดง
-// - โค้ดถูกแยกเป็นหลายไฟล์ด้วย partial class เพื่อแก้ง่าย:
-//   - GameOverScreen.cs            : โครงหลัก + fields + Show/Hide
-//   - GameOverScreen.Wiring.cs     : Auto-wire หา Text/Buttons จากลูก ๆ ของหน้าจอนี้
-//   - GameOverScreen.Points.cs     : กติกาการแสดงคะแนน (POINTS)
-//   - GameOverScreen.Actions.cs    : ปุ่ม Restart/Next/MainMenu และการโหลด Scene
-//
-// จุดที่แก้บ่อย (แก้แล้วได้อะไร):
-// - gameOverTitle / winTitle      : เปลี่ยนข้อความหัวข้อ
-// - pointsFormat                  : เปลี่ยนรูปแบบคะแนน (เฉพาะกรณีที่ไม่มี label "POINTS :" ใน UI)
-// - winSceneName                  : ตอนชนะแล้วกด Next จะไปฉากไหน
-// - restartButtonLabelGameOver/Win: เปลี่ยนชื่อปุ่ม Restart/Next
 // =================================================================================================
 public partial class GameOverScreen : MonoBehaviour
 {
@@ -69,7 +57,10 @@ public partial class GameOverScreen : MonoBehaviour
 
     [SerializeField] private Button restartButton;
     [SerializeField] private Button mainMenuButton;
-    [SerializeField] private GameObject backgroundOverlay; // Optional background panel (e.g., dim screen)
+    [SerializeField] private GameObject backgroundOverlay;
+
+    [Header("Timing")]
+    [SerializeField] private float showDelaySeconds = 2f;
 
     private float previousTimeScale = 1f;
     private bool showingWin;
@@ -77,6 +68,10 @@ public partial class GameOverScreen : MonoBehaviour
     private int lastShownPoints;
     private bool restartHooked;
     private bool mainMenuHooked;
+
+    private Coroutine showRoutine;
+    private CanvasGroup canvasGroup;
+
 
 
     /// <summary>
@@ -91,25 +86,27 @@ public partial class GameOverScreen : MonoBehaviour
     private void Awake()
     {
         // Migration / safety: older scenes may have serialized the previous default.
-        if (string.IsNullOrWhiteSpace(winSceneName) || winSceneName == "Level 2")
+        if (string.IsNullOrWhiteSpace(winSceneName) || winSceneName == "Level2")
             winSceneName = "LevelSelection";
 
         TryAutoWire();
         EnsurePointsText();
 
-        // Hide at start
-        gameObject.SetActive(false);
+        // Ensure we can hide/show this panel without disabling the GameObject (coroutines)
+        canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null) canvasGroup = gameObject.AddComponent<CanvasGroup>();
+
+        // Start hidden
+        SetPanelVisible(false);
+        if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
 
         EnsureButtonHooks();
 
         if (mainMenuButton == null)
             Debug.LogWarning($"{nameof(GameOverScreen)}: mainMenuButton is not set.", this);
 
-        if (pointsText == null)
-        {
-            if (pointsTextLegacy == null)
-                Debug.LogWarning($"{nameof(GameOverScreen)}: pointsText is not set (score will not display).", this);
-        }
+        if (pointsText == null && pointsTextLegacy == null)
+            Debug.LogWarning($"{nameof(GameOverScreen)}: pointsText is not set (score will not display).", this);
     }
 
     /// <summary>
@@ -203,7 +200,6 @@ public partial class GameOverScreen : MonoBehaviour
             SaveLevelCompletedFlagForCurrentScene();
 
         EnsurePointsText();
-
         SetRestartButtonLabel(isWin);
 
         if (titleText != null) titleText.text = isWin ? winTitle : gameOverTitle;
@@ -211,17 +207,53 @@ public partial class GameOverScreen : MonoBehaviour
 
         UpdatePointsText(points);
 
-        gameObject.SetActive(true);
-        if (backgroundOverlay != null) backgroundOverlay.SetActive(true);
-
-        // Pause time so gameplay stops when popup is shown
+        // Pause time immediately.
         previousTimeScale = Time.timeScale;
         Time.timeScale = 0f;
+
+        // Make sure any previous delayed show is cancelled.
+        if (showRoutine != null)
+        {
+            StopCoroutine(showRoutine);
+            showRoutine = null;
+        }
+
+        // Hide everything during delay
+        SetPanelVisible(false);
+        if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
+
+        // Make sure object is active so coroutine can run
+        if (!gameObject.activeSelf)
+            gameObject.SetActive(true);
+
+        showRoutine = StartCoroutine(DelayedShowRoutine());
+    }
+
+    private System.Collections.IEnumerator DelayedShowRoutine()
+    {
+        float delay = Mathf.Max(0f, showDelaySeconds);
+        if (delay > 0f)
+            yield return new WaitForSecondsRealtime(delay);
+
+        if (backgroundOverlay != null) backgroundOverlay.SetActive(true);
+        SetPanelVisible(true);
+
+        showRoutine = null;
+    }
+
+    private void SetPanelVisible(bool visible)
+    {
+        if (canvasGroup == null) canvasGroup = GetComponent<CanvasGroup>();
+        if (canvasGroup == null) return;
+
+        canvasGroup.alpha = visible ? 1f : 0f;
+        canvasGroup.interactable = visible;
+        canvasGroup.blocksRaycasts = visible;
     }
 
     private static void SaveLevelCompletedFlagForCurrentScene()
     {
-        // Parse level number from scene name (e.g. "Level 1" -> 1)
+        // Parse level number from scene name (e.g. "Level1" ->1)
         var sceneName = SceneManager.GetActiveScene().name;
         var match = System.Text.RegularExpressions.Regex.Match(sceneName ?? string.Empty, @"\d+");
         if (!match.Success) return;
@@ -234,18 +266,16 @@ public partial class GameOverScreen : MonoBehaviour
         PlayerPrefs.Save();
     }
 
-    // Hide: ปิดหน้าจอ และคืนค่าเวลาเดิม
-    /// <summary>
-    /// Hide(): ปิดหน้าจอจบเกม และ unpause โดยคืนค่า Time.timeScale
-    ///
-    /// แก้เมธอดนี้แล้วได้อะไร:
-    /// - ถ้าอยากให้ปิดแล้วทำอย่างอื่นต่อ (เช่น เล่นต่อ) สามารถเพิ่ม logic ที่นี่ได้
-    /// </summary>
     public void Hide()
     {
-        gameObject.SetActive(false);
+        if (showRoutine != null)
+        {
+            StopCoroutine(showRoutine);
+            showRoutine = null;
+        }
+
+        SetPanelVisible(false);
         if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
         Time.timeScale = previousTimeScale;
     }
-
 }

@@ -10,7 +10,7 @@ public class Typer : MonoBehaviour
     public TMP_Text timerOutput = null;
     public void OnFoodIconClicked()
     {
-    ConsumeFood();
+        ConsumeFood();
     }
 
     [SerializeField] private GameOverScreen gameOverScreen = null;
@@ -23,7 +23,6 @@ public class Typer : MonoBehaviour
     [SerializeField] private int healPerFood = 1;
     [Header("Food UI")]
     [SerializeField] private TMP_Text foodOutput;
-
 
     private int currentFood = 0;
 
@@ -46,6 +45,9 @@ public class Typer : MonoBehaviour
     [SerializeField] private MonsterHealth monsterHealth;
     [SerializeField] private int monsterDamagePerCorrectWord = 1;
 
+    [Header("Monster Portrait (optional)")]
+    [SerializeField] private MonsterPortraitUI monsterPortraitUI;
+
     [Header("Time limit damage")]
     [SerializeField] private int slowWordDamage = 1;
 
@@ -67,6 +69,9 @@ public class Typer : MonoBehaviour
             if (gameOverScreen == null)
                 gameOverScreen = Object.FindFirstObjectByType<GameOverScreen>(FindObjectsInactive.Include);
         }
+
+        if (monsterPortraitUI == null)
+            monsterPortraitUI = Object.FindFirstObjectByType<MonsterPortraitUI>(FindObjectsInactive.Include);
     }
 
     private void Start()
@@ -86,11 +91,9 @@ public class Typer : MonoBehaviour
         CheckInput();
         UpdateTimer();
         if (Input.GetKeyDown(KeyCode.H) && !IsHealthFull())
-{
-    ConsumeFood();
-}
-
-
+        {
+            ConsumeFood();
+        }
     }
 
     private void SetCurrentWord()
@@ -146,7 +149,6 @@ public class Typer : MonoBehaviour
             {
                 AddPoint(pointsPerWord);
 
-                // Damage monster when player types the whole word correctly
                 if (monsterHealth != null)
                 {
                     monsterHealth.TakeDamage(monsterDamagePerCorrectWord);
@@ -163,8 +165,7 @@ public class Typer : MonoBehaviour
         }
         else
         {
-            // Do nothing on wrong letter (no heart reduction)
-            // Optional: you can add feedback here (sound/shake/etc.)
+            // wrong letter: no damage currently
         }
     }
 
@@ -218,12 +219,15 @@ public class Typer : MonoBehaviour
     {
         if (isGameOver) return;
 
-        // Take 1 health for being too slow on this word
+        // Monster attacks when you're too slow
+        if (monsterPortraitUI != null)
+            monsterPortraitUI.PlayAttack();
+
+        // Take health for being too slow on this word
         if (playerHealth != null)
         {
             playerHealth.TakeDamage(slowWordDamage);
 
-            // If health reached 0, PlayerHealth will show Game Over screen.
             if (playerHealth.CurrentHealth <= 0)
             {
                 isGameOver = true;
@@ -232,7 +236,6 @@ public class Typer : MonoBehaviour
         }
         else
         {
-            // Fallback behavior if no health system is assigned
             isGameOver = true;
             ScoreKeeper.Set(score);
             if (gameOverScreen != null) gameOverScreen.Show(score);
@@ -240,7 +243,6 @@ public class Typer : MonoBehaviour
             return;
         }
 
-        // Still alive: skip to next word and reset timer
         SetCurrentWord();
     }
 
@@ -273,50 +275,44 @@ public class Typer : MonoBehaviour
         SceneManager.LoadScene("Level 2");
     }
 
-private bool IsHealthFull()
-{
-    if (playerHealth == null) return true;
-    return playerHealth.CurrentHealth >= playerHealth.MaxHealth;
-}
+    private bool IsHealthFull()
+    {
+        if (playerHealth == null) return true;
+        return playerHealth.CurrentHealth >= playerHealth.MaxHealth;
+    }
 
-private void ConsumeFood()
-{
-    if (playerHealth == null) return;
-    if (currentFood <= 0) return;
-    if (IsHealthFull()) return;
+    private void ConsumeFood()
+    {
+        if (playerHealth == null) return;
+        if (currentFood <= 0) return;
+        if (IsHealthFull()) return;
 
-    currentFood--;
-    playerHealth.Heal(healPerFood);
+        currentFood--;
+        playerHealth.Heal(healPerFood);
 
-    UpdateFoodDisplay();
-    UpdateFoodIcon();
-}
+        UpdateFoodDisplay();
+        UpdateFoodIcon();
+    }
 
+    private void UpdateFoodIcon()
+    {
+        if (foodIcon == null) return;
 
-private void UpdateFoodIcon()
-{
-    if (foodIcon == null) return;
+        foodIcon.SetActive(currentFood > 0);
+    }
 
-    foodIcon.SetActive(currentFood > 0);
-}
+    private void AddFood(int amount)
+    {
+        if (amount <= 0) return;
 
+        currentFood = Mathf.Min(maxFood, currentFood + amount);
+        UpdateFoodDisplay();
+        UpdateFoodIcon();
+    }
 
-private void AddFood(int amount)
-{
-    if (amount <= 0) return;
-
-    currentFood = Mathf.Min(maxFood, currentFood + amount);
-    UpdateFoodDisplay();
-    UpdateFoodIcon();
-   
-}
-
-
-private void UpdateFoodDisplay()
-{
-    if (foodOutput != null)
-        foodOutput.text = currentFood.ToString();
-}
-
-
+    private void UpdateFoodDisplay()
+    {
+        if (foodOutput != null)
+            foodOutput.text = currentFood.ToString();
+    }
 }
