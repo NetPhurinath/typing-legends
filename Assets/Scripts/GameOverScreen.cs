@@ -48,6 +48,10 @@ public partial class GameOverScreen : MonoBehaviour
     // ถ้าไม่สามารถโหลดด่านถัดไปได้ จะ fallback ไป winSceneName
     [SerializeField] private bool autoAdvanceToNextLevelOnWin = true;
 
+    [Header("Win Next Override (optional)")]
+    [Tooltip("If set, pressing Next on the WIN screen loads this scene directly (e.g. 'Level 22'). Leave empty to use auto-advance/fallback.")]
+    [SerializeField] private string winNextOverrideSceneName = "Level 22";
+
     // รูปแบบชื่อ scene ของด่านถัดไป (ต้องมี {0}) เช่น "Level {0}"
     [SerializeField] private string nextLevelSceneNameFormat = "Level {0}";
 

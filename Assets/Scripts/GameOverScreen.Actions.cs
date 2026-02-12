@@ -5,6 +5,34 @@ using TMPro;
 
 public partial class GameOverScreen
 {
+    private static bool TryResolveLoadableSceneName(string requestedName, out string resolvedName)
+    {
+        resolvedName = null;
+        if (string.IsNullOrWhiteSpace(requestedName))
+            return false;
+
+        // 1) Direct check (most common)
+        if (Application.CanStreamedLevelBeLoaded(requestedName))
+        {
+            resolvedName = requestedName;
+            return true;
+        }
+
+        // 2) Normalize common "Level2" -> "Level 2" (and also supports "LEVEL2")
+        var m = System.Text.RegularExpressions.Regex.Match(requestedName.Trim(), @"^\s*([A-Za-z_]+)\s*(\d+)\s*$");
+        if (m.Success)
+        {
+            string normalized = $"{m.Groups[1].Value} {m.Groups[2].Value}";
+            if (Application.CanStreamedLevelBeLoaded(normalized))
+            {
+                resolvedName = normalized;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     // =====================================================================
     // Actions (ปุ่ม/การนำทาง)
     // - Restart/Next: ถ้าแพ้ => โหลดฉากเดิม, ถ้าชนะ => โหลด winSceneName
@@ -89,6 +117,24 @@ public partial class GameOverScreen
 
         if (showingWin)
         {
+            // Win: if an override scene is set, go there directly.
+            if (!string.IsNullOrWhiteSpace(winNextOverrideSceneName))
+            {
+                if (TryResolveLoadableSceneName(winNextOverrideSceneName, out string resolvedOverride))
+                {
+                    if (resolvedOverride != winNextOverrideSceneName)
+                        Debug.LogWarning($"{nameof(GameOverScreen)}: Override WIN Next scene '{winNextOverrideSceneName}' not found; using '{resolvedOverride}' instead.", this);
+
+                    SceneManager.LoadScene(resolvedOverride);
+                    return;
+                }
+
+                Debug.LogError(
+                    $"{nameof(GameOverScreen)}: Override WIN Next scene '{winNextOverrideSceneName}' cannot be loaded. " +
+                    "Add it to Scenes In Build, or fix the scene name (e.g. 'Level2' vs 'Level 2').",
+                    this);
+            }
+
             // Win: Next -> try next level (Level N+1) first, then fallback to winSceneName
             if (autoAdvanceToNextLevelOnWin)
             {

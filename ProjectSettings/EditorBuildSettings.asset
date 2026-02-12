@@ -20,36 +20,33 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Level 1.unity
     guid: ebe44d2d10c0b5745b7dc392cef40449
-  - enabled: 0
-    path: Assets/Scenes/U Siwagorn(You Win).unity
-    guid: b1fea5cf58ea66d43b7e78508e3a06da
   - enabled: 1
     path: Assets/Scenes/Level 2.unity
-    guid: d45590925f3765944913c972a346d3a1
+    guid: 6922866726e2cae4eacf0decabb08a53
   - enabled: 1
     path: Assets/Scenes/Level 3.unity
-    guid: 1d09e2263b176304985e04ee0ef9f81d
+    guid: 6fe119ebb9da4bd49befb34601d91c72
   - enabled: 1
     path: Assets/Scenes/Level 4.unity
-    guid: d6d3f05947a88544b8947118190f44fa
+    guid: c1a15c813e9b9b9408d981bd8f7fe2d3
   - enabled: 1
     path: Assets/Scenes/Level 5.unity
-    guid: 1ebbf31057c0e0b4f83396aae5e24f7a
+    guid: 45a369561e97a7245897b59ca3b5bc70
   - enabled: 1
     path: Assets/Scenes/Level 6.unity
-    guid: 928308aba055087439770354080dd0d8
+    guid: c392456e28a900645a643a1094890895
   - enabled: 1
     path: Assets/Scenes/Level 7.unity
-    guid: 9e5cf1e609164db46b052e43c33b5561
+    guid: f7440f59ff9572041a6b26a3f71ebbd0
   - enabled: 1
     path: Assets/Scenes/Level 8.unity
-    guid: 01946f7066e53b042b7b03fca25ee2e7
+    guid: 3e4230d17064fc34d9b9ff98ee689123
   - enabled: 1
     path: Assets/Scenes/Level 9.unity
-    guid: d5ae122eec2d2d04597cb9a6bc0e91db
+    guid: cffd995166e1954498103c1f60237a0d
   - enabled: 1
     path: Assets/Scenes/Level 10.unity
-    guid: f902bf3bfe1c701429972aaa1ac3c9db
+    guid: 972dc88700fa97d4f90d6f7eea08458c
   m_configObjects:
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2bcd2660ca9b64942af0de543d8d7100, type: 3}
   m_UseUCBPForAssetBundles: 0
