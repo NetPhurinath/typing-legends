@@ -85,12 +85,18 @@ public partial class GameOverScreen
         // กันการ AddListener ซ้ำ (จะทำให้กด 1 ครั้งแล้วโหลดซ้ำหลายครั้ง)
         if (restartButton != null && !restartHooked)
         {
+            // Ensure this screen fully owns the button behavior.
+            // Some scenes may have leftover Inspector-wired listeners that navigate elsewhere.
+            restartButton.onClick.RemoveAllListeners();
             restartButton.onClick.AddListener(OnRestartPressed);
             restartHooked = true;
         }
 
         if (mainMenuButton != null && !mainMenuHooked)
         {
+            // "LEVEL" button should always return to level selection.
+            // Clear any leftover Inspector-wired listeners to avoid loading the wrong scene.
+            mainMenuButton.onClick.RemoveAllListeners();
             mainMenuButton.onClick.AddListener(OnMainMenuPressed);
             mainMenuHooked = true;
         }
@@ -206,14 +212,21 @@ public partial class GameOverScreen
         if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
         Time.timeScale = previousTimeScale;
 
-        // In this project, the WIN screen's "MENU" should return to the level selection screen.
-        // Reuse winSceneName as the configured target (default: "LevelSelection").
-        var target = string.IsNullOrWhiteSpace(winSceneName) ? "LevelSelection" : winSceneName;
-        if (!Application.CanStreamedLevelBeLoaded(target))
+        // "LEVEL" button always goes to the level selection screen.
+        const string defaultTarget = "LevelSelection";
+        if (TryResolveLoadableSceneName(defaultTarget, out var resolved))
         {
-            Debug.LogError($"{nameof(GameOverScreen)}: Scene '{target}' cannot be loaded. Add it to Scenes In Build.", this);
+            SceneManager.LoadScene(resolved);
             return;
         }
-        SceneManager.LoadScene(target);
+
+        // Back-compat for projects that used a spaced name.
+        if (TryResolveLoadableSceneName("Level Selection", out resolved))
+        {
+            SceneManager.LoadScene(resolved);
+            return;
+        }
+
+        Debug.LogError($"{nameof(GameOverScreen)}: Cannot load Level Selection scene. Add '{defaultTarget}' to Scenes In Build.", this);
     }
 }
