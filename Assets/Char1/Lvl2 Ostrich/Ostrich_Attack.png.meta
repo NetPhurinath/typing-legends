@@ -1,22 +1,10 @@
 fileFormatVersion: 2
-guid: 630ea3167185914448d5387f341199a3
+guid: 17f33521b8b7c6e448f103008e25e496
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8932154214229173346
-    second: Bear_Attack_0
-  - first:
-      213: 2073371222263828158
-    second: Bear_Attack_1
-  - first:
-      213: 8475008236743639273
-    second: Bear_Attack_2
-  - first:
-      213: 895329416020127910
-    second: Bear_Attack_3
-  - first:
-      213: 1804751173891814793
-    second: Bear_Attack_4
+      213: 7487172780191830817
+    second: Ostrich_Attack_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,7 +37,7 @@ TextureImporter:
   maxTextureSize: 2048
   textureSettings:
     serializedVersion: 2
-    filterMode: 1
+    filterMode: 0
     aniso: 1
     mipBias: 0
     wrapU: 1
@@ -87,7 +75,7 @@ TextureImporter:
     maxTextureSize: 2048
     resizeAlgorithm: 0
     textureFormat: -1
-    textureCompression: 1
+    textureCompression: 0
     compressionQuality: 50
     crunchedCompression: 0
     allowsAlphaSplitting: 0
@@ -125,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Bear_Attack_0
+      name: Ostrich_Attack_0
       rect:
         serializedVersion: 2
-        x: 135
-        y: 7
-        width: 377
-        height: 344
+        x: 65
+        y: 19
+        width: 300
+        height: 319
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -140,96 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: e9b9cd5111d9a0480800000000000000
-      internalID: -8932154214229173346
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bear_Attack_1
-      rect:
-        serializedVersion: 2
-        x: 422
-        y: 210
-        width: 95
-        height: 71
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: ebe8d86342816cc10800000000000000
-      internalID: 2073371222263828158
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bear_Attack_2
-      rect:
-        serializedVersion: 2
-        x: 420
-        y: 70
-        width: 95
-        height: 116
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9e04d9bb6174d9570800000000000000
-      internalID: 8475008236743639273
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bear_Attack_3
-      rect:
-        serializedVersion: 2
-        x: 461
-        y: 63
-        width: 54
-        height: 47
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 6a076d63c59dc6c00800000000000000
-      internalID: 895329416020127910
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Bear_Attack_4
-      rect:
-        serializedVersion: 2
-        x: 206
-        y: 2
-        width: 33
-        height: 8
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 9857ac371a3cb0910800000000000000
-      internalID: 1804751173891814793
+      spriteID: 123de4f89f7c7e760800000000000000
+      internalID: 7487172780191830817
       vertices: []
       indices: 
       edges: []
@@ -248,11 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Bear_Attack_0: -8932154214229173346
-      Bear_Attack_1: 2073371222263828158
-      Bear_Attack_2: 8475008236743639273
-      Bear_Attack_3: 895329416020127910
-      Bear_Attack_4: 1804751173891814793
+      Ostrich_Attack_0: 7487172780191830817
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

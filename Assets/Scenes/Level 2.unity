@@ -238,6 +238,7 @@ MonoBehaviour:
   playerHealth: {fileID: 338472468}
   monsterHealth: {fileID: 766983549}
   monsterDamagePerCorrectWord: 1
+  monsterPortraitUI: {fileID: 0}
   slowWordDamage: 1
 --- !u!4 &203963480
 Transform:
@@ -1873,8 +1874,9 @@ GameObject:
   - component: {fileID: 766983548}
   - component: {fileID: 766983547}
   - component: {fileID: 766983549}
+  - component: {fileID: 766983550}
   m_Layer: 5
-  m_Name: BearMonster
+  m_Name: OstrichMonster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1896,8 +1898,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 500, y: -170}
-  m_SizeDelta: {x: 331.5, y: 370.5}
+  m_AnchoredPosition: {x: 500, y: -100}
+  m_SizeDelta: {x: 353.6, y: 562.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &766983547
 MonoBehaviour:
@@ -1919,9 +1921,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 9124120133182934757, guid: af8bf3867084967468b2007d4ae4c3a4, type: 3}
+  m_Sprite: {fileID: -1094201826513439546, guid: 6d5377ab2af232d41be61afe1424c086, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1952,6 +1954,26 @@ MonoBehaviour:
   maxHealth: 5
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
+  portraitUI: {fileID: 0}
+--- !u!114 &766983550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766983545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41dc45aa8ee840f41a87c0bb1f88bcd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterPortraitUI
+  image: {fileID: 766983547}
+  idleSprite: {fileID: -1094201826513439546, guid: 6d5377ab2af232d41be61afe1424c086, type: 3}
+  hitSprite: {fileID: 7840818823010204435, guid: be448e17f280dea48a0763e451ced5b9, type: 3}
+  attackSprite: {fileID: 7487172780191830817, guid: 17f33521b8b7c6e448f103008e25e496, type: 3}
+  defeatSprite: {fileID: 5840534335826768597, guid: 73f7e26a644bd2347b080bba5fa1efbb, type: 3}
+  hitDuration: 0.4
+  attackDuration: 0.5
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
@@ -2654,12 +2676,14 @@ MonoBehaviour:
   pointsFormat: '{0} POINTS'
   winSceneName: Level 2
   autoAdvanceToNextLevelOnWin: 1
+  winNextOverrideSceneName: Level 22
   nextLevelSceneNameFormat: Level {0}
   restartButtonLabelGameOver: Restart
   restartButtonLabelWin: Next
   restartButton: {fileID: 1879265057}
   mainMenuButton: {fileID: 604558091}
   backgroundOverlay: {fileID: 0}
+  showDelaySeconds: 2
 --- !u!114 &1081749084
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3255,7 +3279,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 130}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1317908739
