@@ -21,7 +21,7 @@ public class PlayerHealth : MonoBehaviour
 
     private void Awake()
     {
-        if (typer == null) typer = FindObjectOfType<Typer>();
+        if (typer == null) typer = Object.FindFirstObjectByType<Typer>();
         if (gameOverScreen == null)
         {
             var endScreens = Object.FindObjectsByType<GameOverScreen>(FindObjectsInactive.Include, FindObjectsSortMode.None);

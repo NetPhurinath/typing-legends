@@ -24,7 +24,7 @@ public class MonsterHealth : MonoBehaviour
 
     private void Awake()
     {
-        if (typer == null) typer = FindObjectOfType<Typer>();
+        if (typer == null) typer = Object.FindFirstObjectByType<Typer>();
 
         if (portraitUI == null)
             portraitUI = Object.FindFirstObjectByType<MonsterPortraitUI>(FindObjectsInactive.Include);

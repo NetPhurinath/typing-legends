@@ -12,7 +12,7 @@ public class Timer : MonoBehaviour
 
     private void Awake()
     {
-        if (typer == null) typer = FindObjectOfType<Typer>();
+        if (typer == null) typer = UnityEngine.Object.FindFirstObjectByType<Typer>();
     }
 
     private void Update()
