@@ -1877,7 +1877,7 @@ GameObject:
   - component: {fileID: 766983549}
   - component: {fileID: 766983550}
   m_Layer: 5
-  m_Name: BearMonster
+  m_Name: IndrajitMonster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1922,7 +1922,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 9124120133182934757, guid: af8bf3867084967468b2007d4ae4c3a4, type: 3}
+  m_Sprite: {fileID: 4859721344107039612, guid: 2002b703d1885da439c6c5f9daaa5f68, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1968,11 +1968,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41dc45aa8ee840f41a87c0bb1f88bcd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterPortraitUI
-  image: {fileID: 0}
-  idleSprite: {fileID: 0}
-  hitSprite: {fileID: 0}
-  attackSprite: {fileID: 0}
-  defeatSprite: {fileID: 0}
+  image: {fileID: 766983547}
+  idleSprite: {fileID: 4859721344107039612, guid: 2002b703d1885da439c6c5f9daaa5f68, type: 3}
+  hitSprite: {fileID: 4296843936858717165, guid: bb621e4130b7adf44a2947f5efd92c62, type: 3}
+  attackSprite: {fileID: -3515253027986610511, guid: 5fb0501159b06e44499bfce3b4ebab79, type: 3}
+  defeatSprite: {fileID: 4259842506288186066, guid: c4087686b7f9a954cb2879e8f87e408c, type: 3}
   hitDuration: 0.15
   attackDuration: 0.2
 --- !u!1 &774382375
