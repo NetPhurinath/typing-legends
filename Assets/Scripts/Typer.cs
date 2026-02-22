@@ -1,10 +1,13 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.SceneManagement;
+using System.Reflection;
 
 public class Typer : MonoBehaviour
 {
     public Wordbank wordbank = null;
+    [Header("Wordbank (any WordbankX)")]
+    [SerializeField] private MonoBehaviour wordbankBehaviour = null;
     public TMP_Text wordOutput = null;
     public TMP_Text pointOutput = null;
     public TMP_Text timerOutput = null;
@@ -37,6 +40,9 @@ public class Typer : MonoBehaviour
     public float countdownTime = 5f;
     private float timer;
     private bool isGameOver = false;
+
+    private object resolvedWordbank = null;
+    private MethodInfo resolvedGetWordMethod = null;
 
     [Header("Health (optional)")]
     [SerializeField] private PlayerHealth playerHealth;
@@ -76,6 +82,7 @@ public class Typer : MonoBehaviour
 
     private void Start()
     {
+        ResolveWordbankProvider();
         SetCurrentWord();
         UpdatePointDisplay();
         UpdateFoodDisplay();
@@ -98,11 +105,98 @@ public class Typer : MonoBehaviour
 
     private void SetCurrentWord()
     {
+        if (!ResolveWordbankProvider())
+        {
+            isGameOver = true;
+            return;
+        }
+
         typedCount = 0;
-        currentWord = wordbank.GetWord();
+        currentWord = GetWordFromResolvedProvider();
+
+        if (string.IsNullOrEmpty(currentWord))
+        {
+            Debug.LogError("Typer: Wordbank returned an empty word.");
+            isGameOver = true;
+            return;
+        }
 
         SetRemainingWord(currentWord);
         ResetTimer();
+    }
+
+    private bool ResolveWordbankProvider()
+    {
+        if (resolvedWordbank != null) return true;
+
+        // 1) Explicit assignment: any MonoBehaviour with GetWord():string
+        if (wordbankBehaviour != null)
+        {
+            if (TryResolveFromBehaviour(wordbankBehaviour, out resolvedWordbank, out resolvedGetWordMethod))
+                return true;
+
+            Debug.LogError("Typer: 'wordbankBehaviour' is set but does not have a GetWord() method that returns string.");
+            return false;
+        }
+
+        // 2) Legacy assignment: Wordbank
+        if (wordbank != null)
+        {
+            resolvedWordbank = wordbank;
+            resolvedGetWordMethod = null;
+            return true;
+        }
+
+        // 3) Auto-find any Wordbank* component with GetWord
+        var behaviours = Object.FindObjectsByType<MonoBehaviour>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+        foreach (var behaviour in behaviours)
+        {
+            if (behaviour == null) continue;
+            var typeName = behaviour.GetType().Name;
+            if (!typeName.StartsWith("Wordbank")) continue;
+
+            if (TryResolveFromBehaviour(behaviour, out resolvedWordbank, out resolvedGetWordMethod))
+                return true;
+        }
+
+        Debug.LogError("Typer: No Wordbank component found. Assign a Wordbank/WordbankX on this GameObject or drag it into 'Wordbank Behaviour'.");
+        return false;
+    }
+
+    private static bool TryResolveFromBehaviour(MonoBehaviour behaviour, out object provider, out MethodInfo getWordMethod)
+    {
+        provider = null;
+        getWordMethod = null;
+
+        if (behaviour == null) return false;
+
+        var type = behaviour.GetType();
+        getWordMethod = type.GetMethod(
+            "GetWord",
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+            binder: null,
+            types: System.Type.EmptyTypes,
+            modifiers: null
+        );
+
+        if (getWordMethod == null) return false;
+        if (getWordMethod.ReturnType != typeof(string)) return false;
+
+        provider = behaviour;
+        return true;
+    }
+
+    private string GetWordFromResolvedProvider()
+    {
+        if (resolvedWordbank == null) return string.Empty;
+
+        if (resolvedWordbank is Wordbank typedWordbank)
+            return typedWordbank.GetWord();
+
+        if (resolvedGetWordMethod != null)
+            return (string)resolvedGetWordMethod.Invoke(resolvedWordbank, null);
+
+        return string.Empty;
     }
 
     private void SetRemainingWord(string newString)
