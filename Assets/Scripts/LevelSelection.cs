@@ -22,6 +22,11 @@ public class LevelSelection : MonoBehaviour
     private void Awake()
     {
         button = GetComponent<Button>();
+
+        // If the scene's Button OnClick isn't wired in the inspector,
+        // auto-wire it so unlocked levels are clickable.
+        if (button != null && button.onClick.GetPersistentEventCount() == 0)
+            button.onClick.AddListener(OnAutoClick);
     }
 
     private void OnEnable() => UpdateAll();
@@ -34,6 +39,24 @@ public class LevelSelection : MonoBehaviour
 
         if (button != null)
             button.interactable = unlocked;
+    }
+
+    public void Refresh() => UpdateAll();
+
+    private void OnAutoClick()
+    {
+        var target = ResolveTargetSceneName();
+        if (!string.IsNullOrWhiteSpace(target))
+            PressSelection(target);
+    }
+
+    private string ResolveTargetSceneName()
+    {
+        if (!string.IsNullOrWhiteSpace(levelSceneName))
+            return levelSceneName;
+
+        int n = ResolveLevelNumber();
+        return n > 0 ? $"Level {n}" : string.Empty;
     }
 
     private static string LevelKey(int n) => "Lv" + n.ToString();
@@ -87,7 +110,10 @@ public class LevelSelection : MonoBehaviour
 
     public void PressSelection(string levelName)
     {
-        if (unlocked)
-            SceneManager.LoadScene(levelName);
+        UpdateAll();
+        if (!unlocked) return;
+        if (string.IsNullOrWhiteSpace(levelName)) return;
+
+        SceneManager.LoadScene(levelName);
     }
 }
