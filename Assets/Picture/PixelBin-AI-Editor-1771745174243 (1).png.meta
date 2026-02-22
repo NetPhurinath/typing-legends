@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 83a4ccd0f063e624cb092bf8e4240aa9
+guid: 2bd03560c08da1d4b80cd3ecdee1520a
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6088417213618956211
-    second: Ghost_Defeat_0
-  - first:
-      213: -1218729440745430921
-    second: Ghost_Defeat_1
+      213: 1029381652581448362
+    second: PixelBin-AI-Editor-1771745174243 (1)_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -49,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -103,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Ghost_Defeat_0
+      name: PixelBin-AI-Editor-1771745174243 (1)_0
       rect:
         serializedVersion: 2
-        x: 226
-        y: 122
-        width: 52
-        height: 111
+        x: 0
+        y: 0
+        width: 2720
+        height: 1568
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,30 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 3b7a12ea2376e7450800000000000000
-      internalID: 6088417213618956211
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Ghost_Defeat_1
-      rect:
-        serializedVersion: 2
-        x: 259
-        y: 30
-        width: 223
-        height: 310
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 770ee0fd704361fe0800000000000000
-      internalID: -1218729440745430921
+      spriteID: aaafb6cb829194e00800000000000000
+      internalID: 1029381652581448362
       vertices: []
       indices: 
       edges: []
@@ -150,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -160,8 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Ghost_Defeat_0: 6088417213618956211
-      Ghost_Defeat_1: -1218729440745430921
+      PixelBin-AI-Editor-1771745174243 (1)_0: 1029381652581448362
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

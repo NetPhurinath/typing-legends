@@ -237,7 +237,7 @@ MonoBehaviour:
   pointsPerWord: 50
   countdownTime: 5
   playerHealth: {fileID: 338472468}
-  monsterHealth: {fileID: 766983549}
+  monsterHealth: {fileID: 0}
   monsterDamagePerCorrectWord: 1
   monsterPortraitUI: {fileID: 0}
   slowWordDamage: 1
@@ -1863,98 +1863,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749702806}
   m_CullTransparentMesh: 1
---- !u!1 &766983545
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 766983546}
-  - component: {fileID: 766983548}
-  - component: {fileID: 766983547}
-  - component: {fileID: 766983549}
-  m_Layer: 5
-  m_Name: BearMonster
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &766983546
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766983545}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1352426346}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 500, y: -170}
-  m_SizeDelta: {x: 331.5, y: 370.5}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &766983547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766983545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 9124120133182934757, guid: af8bf3867084967468b2007d4ae4c3a4, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &766983548
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766983545}
-  m_CullTransparentMesh: 1
---- !u!114 &766983549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766983545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b94b45cbe0840bd4f847293872010e76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterHealth
-  maxHealth: 5
-  gameOverScreen: {fileID: 1081749083}
-  typer: {fileID: 203963479}
-  portraitUI: {fileID: 0}
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
@@ -2608,7 +2516,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1081749082
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2685,7 +2593,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3966534059965222835, guid: e59c582350c1fda4b80c048a02d0a1f7, type: 3}
+  m_Sprite: {fileID: 1029381652581448362, guid: 2bd03560c08da1d4b80cd3ecdee1520a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3275,7 +3183,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7a5029beb08eb43902e402e22450eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterHeartUI
-  monsterHealth: {fileID: 766983549}
+  monsterHealth: {fileID: 0}
   hearts:
   - {fileID: 1862389777}
   - {fileID: 1340899138}
@@ -3457,7 +3365,6 @@ RectTransform:
   - {fileID: 572717070}
   - {fileID: 1081986831}
   - {fileID: 338472465}
-  - {fileID: 766983546}
   - {fileID: 1778011534}
   - {fileID: 1208190992}
   - {fileID: 1317908738}
@@ -3873,7 +3780,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3966534059965222835, guid: e59c582350c1fda4b80c048a02d0a1f7, type: 3}
+  m_Sprite: {fileID: 1029381652581448362, guid: 2bd03560c08da1d4b80cd3ecdee1520a, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
