@@ -1877,7 +1877,7 @@ GameObject:
   - component: {fileID: 766983549}
   - component: {fileID: 766983550}
   m_Layer: 5
-  m_Name: BearMonster
+  m_Name: YakshaSoldierMonster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1922,7 +1922,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 9124120133182934757, guid: af8bf3867084967468b2007d4ae4c3a4, type: 3}
+  m_Sprite: {fileID: -3427461616068482793, guid: 1974644d2bacb33459ccdc396f5b9c6c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1968,11 +1968,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41dc45aa8ee840f41a87c0bb1f88bcd1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterPortraitUI
-  image: {fileID: 0}
-  idleSprite: {fileID: 0}
-  hitSprite: {fileID: 0}
-  attackSprite: {fileID: 0}
-  defeatSprite: {fileID: 0}
+  image: {fileID: 766983547}
+  idleSprite: {fileID: -3427461616068482793, guid: 1974644d2bacb33459ccdc396f5b9c6c, type: 3}
+  hitSprite: {fileID: -7519062800985255506, guid: e3b3362d60345954c95a42c24a546e9f, type: 3}
+  attackSprite: {fileID: 2196085671973841670, guid: 06c3b51a6d86fb84db84103dcc614602, type: 3}
+  defeatSprite: {fileID: 6378620528955523683, guid: 055d501387729cc4f9e11214ea1c2274, type: 3}
   hitDuration: 0.15
   attackDuration: 0.2
 --- !u!1 &774382375
@@ -2628,7 +2628,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1081749082
 RectTransform:
   m_ObjectHideFlags: 0
