@@ -224,7 +224,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Typer
   wordbank: {fileID: 2072567512}
-  wordbankBehaviour: {fileID: 0}
+  wordbankBehaviour: {fileID: 2072567512}
   wordOutput: {fileID: 1081986832}
   pointOutput: {fileID: 1394781970}
   timerOutput: {fileID: 789694824}
