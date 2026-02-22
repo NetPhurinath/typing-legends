@@ -1875,8 +1875,9 @@ GameObject:
   - component: {fileID: 766983548}
   - component: {fileID: 766983547}
   - component: {fileID: 766983549}
+  - component: {fileID: 766983550}
   m_Layer: 5
-  m_Name: BearMonster
+  m_Name: Giant OctopusMonster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1921,7 +1922,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 9124120133182934757, guid: af8bf3867084967468b2007d4ae4c3a4, type: 3}
+  m_Sprite: {fileID: -4270672708619485062, guid: a03a77904fe4263439308f7a658d8163, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1955,6 +1956,25 @@ MonoBehaviour:
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
   portraitUI: {fileID: 0}
+--- !u!114 &766983550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766983545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41dc45aa8ee840f41a87c0bb1f88bcd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterPortraitUI
+  image: {fileID: 766983547}
+  idleSprite: {fileID: -4270672708619485062, guid: a03a77904fe4263439308f7a658d8163, type: 3}
+  hitSprite: {fileID: -4436836631913940989, guid: 913bf758dafd5d2469c2ea333238a1c6, type: 3}
+  attackSprite: {fileID: 4448060961254937349, guid: bd1d99bd8339251469118ad6d047d667, type: 3}
+  defeatSprite: {fileID: 6215954471321655145, guid: a94f6870436c2dd4d9896979af1aaa4c, type: 3}
+  hitDuration: 0.15
+  attackDuration: 0.2
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
@@ -2608,7 +2628,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1081749082
 RectTransform:
   m_ObjectHideFlags: 0

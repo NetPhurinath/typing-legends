@@ -1875,6 +1875,7 @@ GameObject:
   - component: {fileID: 766983548}
   - component: {fileID: 766983547}
   - component: {fileID: 766983549}
+  - component: {fileID: 766983550}
   m_Layer: 5
   m_Name: BearMonster
   m_TagString: Untagged
@@ -1955,6 +1956,25 @@ MonoBehaviour:
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
   portraitUI: {fileID: 0}
+--- !u!114 &766983550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 766983545}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41dc45aa8ee840f41a87c0bb1f88bcd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterPortraitUI
+  image: {fileID: 0}
+  idleSprite: {fileID: 0}
+  hitSprite: {fileID: 0}
+  attackSprite: {fileID: 0}
+  defeatSprite: {fileID: 0}
+  hitDuration: 0.15
+  attackDuration: 0.2
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
