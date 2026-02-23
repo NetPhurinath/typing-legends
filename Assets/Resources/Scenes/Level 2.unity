@@ -843,8 +843,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -600.3, y: -243.07}
-  m_SizeDelta: {x: 344.7887, y: 486.13}
+  m_AnchoredPosition: {x: -599, y: -150}
+  m_SizeDelta: {x: 474.8004, y: 669.4366}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &338472466
 MonoBehaviour:
@@ -899,6 +899,7 @@ MonoBehaviour:
   maxHealth: 3
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
+  sfxPlayer: {fileID: 0}
 --- !u!1 &481245538
 GameObject:
   m_ObjectHideFlags: 0
@@ -1877,7 +1878,7 @@ GameObject:
   - component: {fileID: 766983549}
   - component: {fileID: 766983550}
   m_Layer: 5
-  m_Name: tot
+  m_Name: OstrichMonster
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1899,8 +1900,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 524, y: -149.15}
-  m_SizeDelta: {x: 540.2504, y: 568.31}
+  m_AnchoredPosition: {x: 498, y: -101.35}
+  m_SizeDelta: {x: 353.6, y: 562.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &766983547
 MonoBehaviour:
@@ -1922,9 +1923,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3404200671121779488, guid: 584d248850299e4429bac3fe03feb8b5, type: 3}
+  m_Sprite: {fileID: -1094201826513439546, guid: 7d87a7f3a9ddcc54197ee719b2b91152, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1956,6 +1957,7 @@ MonoBehaviour:
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
   portraitUI: {fileID: 0}
+  sfxPlayer: {fileID: 0}
 --- !u!114 &766983550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1969,12 +1971,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterPortraitUI
   image: {fileID: 766983547}
-  idleSprite: {fileID: 0}
-  hitSprite: {fileID: 0}
-  attackSprite: {fileID: 0}
-  defeatSprite: {fileID: 0}
-  hitDuration: 0.15
-  attackDuration: 0.2
+  idleSprite: {fileID: -1094201826513439546, guid: 7d87a7f3a9ddcc54197ee719b2b91152, type: 3}
+  hitSprite: {fileID: 8811864471365585228, guid: 7c01c243c966f2d4d80079f6aecabbbe, type: 3}
+  attackSprite: {fileID: 7487172780191830817, guid: 7a6fc6c2ccb1c054a93ac2770ac1f866, type: 3}
+  defeatSprite: {fileID: 5840534335826768597, guid: 3cc3fadeb681e65479cb66877c9cfb2f, type: 3}
+  hitDuration: 0.4
+  attackDuration: 0.5
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
@@ -2705,7 +2707,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3966534059965222835, guid: e59c582350c1fda4b80c048a02d0a1f7, type: 3}
+  m_Sprite: {fileID: -5661896517719364561, guid: 10a8d05a05533d84cbf5f66bfa047711, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2940,7 +2942,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: -527.1535, y: 0, z: -527.15234, w: 0}
+  m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0
@@ -2990,7 +2992,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -149.15}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1208190993
@@ -3280,7 +3282,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 29, y: 0}
+  m_AnchoredPosition: {x: 0, y: 100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1317908739
@@ -3471,6 +3473,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1562923811}
   - {fileID: 1528501625}
   - {fileID: 304979651}
   - {fileID: 481245539}
@@ -3893,7 +3896,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 5156462137814070502, guid: 10a235c6ea2ce1345a24316c4f3339a3, type: 3}
+  m_Sprite: {fileID: -5661896517719364561, guid: 10a8d05a05533d84cbf5f66bfa047711, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4184,6 +4187,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1562923810
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1562923811}
+  - component: {fileID: 1562923812}
+  m_Layer: 0
+  m_Name: SfxPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1562923811
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562923810}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -960, y: -540, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1352426346}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1562923812
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1562923810}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be6b114ccc559841bac09f5461bf2a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxPlayer
+  audioSource: {fileID: 0}
+  playerHitMonsterClip: {fileID: 8300000, guid: 197039a28488b0a42afa80b2a592bd30, type: 3}
+  monsterHitPlayerClip: {fileID: 8300000, guid: 5e10257807e5c1747a3b187efa7facce, type: 3}
 --- !u!1 &1778011532
 GameObject:
   m_ObjectHideFlags: 0
@@ -4720,9 +4770,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2072567511}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6c9dd2d439e2d294fa8a44e270516556, type: 3}
+  m_Script: {fileID: 11500000, guid: eff1fbef975457646af120f31bcfa1c7, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Wordbank9
+  m_EditorClassIdentifier: Assembly-CSharp::Wordbank1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

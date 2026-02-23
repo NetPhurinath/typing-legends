@@ -236,8 +236,8 @@ MonoBehaviour:
   foodOutput: {fileID: 332442353}
   pointsPerWord: 50
   countdownTime: 5
-  playerHealth: {fileID: 0}
-  monsterHealth: {fileID: 766983549}
+  playerHealth: {fileID: 338472468}
+  monsterHealth: {fileID: 1529022872}
   monsterDamagePerCorrectWord: 1
   monsterPortraitUI: {fileID: 0}
   slowWordDamage: 1
@@ -808,7 +808,7 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &457560087
+--- !u!1 &338472464
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -816,10 +816,10 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 457560088}
-  - component: {fileID: 457560091}
-  - component: {fileID: 457560090}
-  - component: {fileID: 457560089}
+  - component: {fileID: 338472465}
+  - component: {fileID: 338472467}
+  - component: {fileID: 338472466}
+  - component: {fileID: 338472468}
   m_Layer: 5
   m_Name: Char
   m_TagString: Untagged
@@ -827,14 +827,14 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!224 &457560088
+--- !u!224 &338472465
 RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 457560087}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_GameObject: {fileID: 338472464}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -843,31 +843,16 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -600.2999, y: -243.07}
-  m_SizeDelta: {x: 344.7887, y: 486.13}
+  m_AnchoredPosition: {x: -599, y: -150}
+  m_SizeDelta: {x: 474.8004, y: 669.4366}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &457560089
+--- !u!114 &338472466
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 457560087}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e68a172b43d0ed4d95acb056a48105c, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
-  maxHealth: 3
-  gameOverScreen: {fileID: 0}
-  typer: {fileID: 0}
---- !u!114 &457560090
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 457560087}
+  m_GameObject: {fileID: 338472464}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
@@ -891,14 +876,30 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!222 &457560091
+--- !u!222 &338472467
 CanvasRenderer:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 457560087}
+  m_GameObject: {fileID: 338472464}
   m_CullTransparentMesh: 1
+--- !u!114 &338472468
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 338472464}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e68a172b43d0ed4d95acb056a48105c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
+  maxHealth: 3
+  gameOverScreen: {fileID: 1081749083}
+  typer: {fileID: 203963479}
+  sfxPlayer: {fileID: 0}
 --- !u!1 &481245538
 GameObject:
   m_ObjectHideFlags: 0
@@ -1863,118 +1864,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 749702806}
   m_CullTransparentMesh: 1
---- !u!1 &766983545
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 766983546}
-  - component: {fileID: 766983548}
-  - component: {fileID: 766983547}
-  - component: {fileID: 766983549}
-  - component: {fileID: 766983550}
-  m_Layer: 5
-  m_Name: YakshaMaidMonster
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &766983546
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766983545}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1352426346}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 492, y: -243.07}
-  m_SizeDelta: {x: 331.5, y: 370.5}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &766983547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766983545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 4700416174049583125, guid: 0e361006b1c29334fa0a913773707230, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
---- !u!222 &766983548
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766983545}
-  m_CullTransparentMesh: 1
---- !u!114 &766983549
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766983545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b94b45cbe0840bd4f847293872010e76, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterHealth
-  maxHealth: 5
-  gameOverScreen: {fileID: 1081749083}
-  typer: {fileID: 203963479}
-  portraitUI: {fileID: 0}
---- !u!114 &766983550
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 766983545}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 41dc45aa8ee840f41a87c0bb1f88bcd1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MonsterPortraitUI
-  image: {fileID: 766983547}
-  idleSprite: {fileID: 4700416174049583125, guid: 0e361006b1c29334fa0a913773707230, type: 3}
-  hitSprite: {fileID: 629140522089239100, guid: bb8d0ed50b0ad5b419636b9936b53336, type: 3}
-  attackSprite: {fileID: -1772298791210331769, guid: a076a89e8c0304f4fb85b331948ab3a6, type: 3}
-  defeatSprite: {fileID: 3768029366271485099, guid: 7e9c9f522f544ea49ac68859d91acb0a, type: 3}
-  hitDuration: 0.15
-  attackDuration: 0.2
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
@@ -2705,7 +2594,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3966534059965222835, guid: e59c582350c1fda4b80c048a02d0a1f7, type: 3}
+  m_Sprite: {fileID: -5661896517719364561, guid: 10a8d05a05533d84cbf5f66bfa047711, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3005,7 +2894,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6492757425abe64dae8b8cf247c9e92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartUI
-  playerHealth: {fileID: 0}
+  playerHealth: {fileID: 338472468}
   hearts:
   - {fileID: 1432336496}
   - {fileID: 1973933677}
@@ -3280,7 +3169,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 60, y: 80}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1317908739
@@ -3295,7 +3184,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7a5029beb08eb43902e402e22450eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterHeartUI
-  monsterHealth: {fileID: 766983549}
+  monsterHealth: {fileID: 1529022872}
   hearts:
   - {fileID: 1862389777}
   - {fileID: 1340899138}
@@ -3471,18 +3360,19 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1575811555}
   - {fileID: 1528501625}
   - {fileID: 304979651}
   - {fileID: 481245539}
   - {fileID: 572717070}
   - {fileID: 1081986831}
-  - {fileID: 766983546}
+  - {fileID: 338472465}
+  - {fileID: 1529022870}
   - {fileID: 1778011534}
   - {fileID: 1208190992}
   - {fileID: 1317908738}
   - {fileID: 1960557104}
   - {fileID: 1480934597}
-  - {fileID: 457560088}
   - {fileID: 1081749082}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -3893,7 +3783,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 5156462137814070502, guid: 10a235c6ea2ce1345a24316c4f3339a3, type: 3}
+  m_Sprite: {fileID: -5661896517719364561, guid: 10a8d05a05533d84cbf5f66bfa047711, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3969,6 +3859,119 @@ SpriteRenderer:
   m_WasSpriteAssigned: 0
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1529022869
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1529022870}
+  - component: {fileID: 1529022874}
+  - component: {fileID: 1529022873}
+  - component: {fileID: 1529022872}
+  - component: {fileID: 1529022871}
+  m_Layer: 5
+  m_Name: GhostMonster
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &1529022870
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529022869}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1352426346}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 498, y: -120}
+  m_SizeDelta: {x: 1015.5, y: 553.5}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &1529022871
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529022869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 41dc45aa8ee840f41a87c0bb1f88bcd1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterPortraitUI
+  image: {fileID: 1529022873}
+  idleSprite: {fileID: 21300000, guid: 82dea0f72a74d134b9c6fb56868e688e, type: 3}
+  hitSprite: {fileID: 21300000, guid: f52eb2095e62c214a95eedbf4e58a98a, type: 3}
+  attackSprite: {fileID: 21300000, guid: 5b8ee8f9129cde841b0e15cdf03641ec, type: 3}
+  defeatSprite: {fileID: 21300000, guid: 83a4ccd0f063e624cb092bf8e4240aa9, type: 3}
+  hitDuration: 0.4
+  attackDuration: 0.5
+--- !u!114 &1529022872
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529022869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94b45cbe0840bd4f847293872010e76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterHealth
+  maxHealth: 5
+  gameOverScreen: {fileID: 0}
+  typer: {fileID: 0}
+  portraitUI: {fileID: 0}
+  sfxPlayer: {fileID: 0}
+--- !u!114 &1529022873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529022869}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 21300000, guid: 82dea0f72a74d134b9c6fb56868e688e, type: 3}
+  m_Type: 0
+  m_PreserveAspect: 1
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1
+--- !u!222 &1529022874
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1529022869}
+  m_CullTransparentMesh: 1
 --- !u!1 &1556504369
 GameObject:
   m_ObjectHideFlags: 0
@@ -4184,6 +4187,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1575811554
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1575811555}
+  - component: {fileID: 1575811556}
+  m_Layer: 0
+  m_Name: SfxPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1575811555
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575811554}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -960, y: -540, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1352426346}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1575811556
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575811554}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be6b114ccc559841bac09f5461bf2a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxPlayer
+  audioSource: {fileID: 0}
+  playerHitMonsterClip: {fileID: 8300000, guid: 197039a28488b0a42afa80b2a592bd30, type: 3}
+  monsterHitPlayerClip: {fileID: 8300000, guid: 5e10257807e5c1747a3b187efa7facce, type: 3}
 --- !u!1 &1778011532
 GameObject:
   m_ObjectHideFlags: 0
@@ -4720,9 +4770,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 2072567511}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94be0f86459aac54b876c4b23fda6025, type: 3}
+  m_Script: {fileID: 11500000, guid: bad116eca3cb7f3448c94452b173a7db, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Wordbank7
+  m_EditorClassIdentifier: Assembly-CSharp::Wordbank2
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

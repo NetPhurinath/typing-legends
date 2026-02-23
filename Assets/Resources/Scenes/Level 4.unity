@@ -844,7 +844,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: -599, y: -150}
-  m_SizeDelta: {x: 474.8004, y: 669.4366}
+  m_SizeDelta: {x: 427.32037, y: 602.4929}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &338472466
 MonoBehaviour:
@@ -899,6 +899,7 @@ MonoBehaviour:
   maxHealth: 3
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
+  sfxPlayer: {fileID: 0}
 --- !u!1 &481245538
 GameObject:
   m_ObjectHideFlags: 0
@@ -1667,8 +1668,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 465, y: -159}
-  m_SizeDelta: {x: 357, y: 399}
+  m_AnchoredPosition: {x: 500, y: -100}
+  m_SizeDelta: {x: 1015.5, y: 553.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &708403662
 MonoBehaviour:
@@ -1683,10 +1684,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterPortraitUI
   image: {fileID: 708403664}
-  idleSprite: {fileID: -3714635100967963262, guid: fc501a0842f390a42a21db923e412d42, type: 3}
-  hitSprite: {fileID: 451821780286379938, guid: 89387e3a629d4b14e9143bf98fcfa91e, type: 3}
-  attackSprite: {fileID: -1909738423949448268, guid: d26f9135703cd584d93ba890f361ee53, type: 3}
-  defeatSprite: {fileID: 6229056334813667800, guid: b569fd532b386bd49b1b6c8404ee9105, type: 3}
+  idleSprite: {fileID: 21300000, guid: fc501a0842f390a42a21db923e412d42, type: 3}
+  hitSprite: {fileID: 21300000, guid: 89387e3a629d4b14e9143bf98fcfa91e, type: 3}
+  attackSprite: {fileID: 21300000, guid: d26f9135703cd584d93ba890f361ee53, type: 3}
+  defeatSprite: {fileID: 21300000, guid: b569fd532b386bd49b1b6c8404ee9105, type: 3}
   hitDuration: 0.4
   attackDuration: 0.5
 --- !u!114 &708403663
@@ -1705,6 +1706,7 @@ MonoBehaviour:
   gameOverScreen: {fileID: 0}
   typer: {fileID: 0}
   portraitUI: {fileID: 0}
+  sfxPlayer: {fileID: 0}
 --- !u!114 &708403664
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1725,7 +1727,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -3714635100967963262, guid: fc501a0842f390a42a21db923e412d42, type: 3}
+  m_Sprite: {fileID: 21300000, guid: fc501a0842f390a42a21db923e412d42, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -2990,7 +2992,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1208190993
@@ -3280,7 +3282,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 100}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1317908739
@@ -3471,6 +3473,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1902027413}
   - {fileID: 1528501625}
   - {fileID: 304979651}
   - {fileID: 481245539}
@@ -4482,6 +4485,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1879265055}
   m_CullTransparentMesh: 1
+--- !u!1 &1902027412
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1902027413}
+  - component: {fileID: 1902027414}
+  m_Layer: 0
+  m_Name: SfxPlayer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1902027413
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1902027412}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -960, y: -540, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1352426346}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1902027414
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1902027412}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9be6b114ccc559841bac09f5461bf2a5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SfxPlayer
+  audioSource: {fileID: 0}
+  playerHitMonsterClip: {fileID: 8300000, guid: 197039a28488b0a42afa80b2a592bd30, type: 3}
+  monsterHitPlayerClip: {fileID: 8300000, guid: 5e10257807e5c1747a3b187efa7facce, type: 3}
 --- !u!1 &1960557103
 GameObject:
   m_ObjectHideFlags: 0
