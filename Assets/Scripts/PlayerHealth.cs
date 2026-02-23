@@ -11,6 +11,9 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private GameOverScreen gameOverScreen;
     [SerializeField] private Typer typer;
 
+    [Header("SFX (optional)")]
+    [SerializeField] private SfxPlayer sfxPlayer;
+
     private int currentHealth;
     private bool isDead;
 
@@ -22,6 +25,10 @@ public class PlayerHealth : MonoBehaviour
     private void Awake()
     {
         if (typer == null) typer = Object.FindFirstObjectByType<Typer>();
+
+        if (sfxPlayer == null)
+            sfxPlayer = Object.FindFirstObjectByType<SfxPlayer>(FindObjectsInactive.Include);
+
         if (gameOverScreen == null)
         {
             var endScreens = Object.FindObjectsByType<GameOverScreen>(FindObjectsInactive.Include, FindObjectsSortMode.None);
@@ -54,6 +61,8 @@ public class PlayerHealth : MonoBehaviour
         if (amount <= 0) return;
 
         currentHealth -= amount;
+        if (sfxPlayer != null) sfxPlayer.PlayMonsterHitPlayer();
+
         if (currentHealth <= 0)
         {
             currentHealth = 0;

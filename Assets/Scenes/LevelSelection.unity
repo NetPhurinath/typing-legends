@@ -198,7 +198,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -278, y: 312}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &84912451
@@ -450,7 +450,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -278, y: -34}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &228683048
@@ -675,7 +675,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -409, y: 455}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &355272602
@@ -1220,8 +1220,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelection
   unlocked: 1
   unlockImage: {fileID: 916464612}
-  clearImage: {fileID: 0}
-  levelSceneName: 
+  clearImage: {fileID: 228683048}
+  levelSceneName: Level 2
 --- !u!1 &598263701
 GameObject:
   m_ObjectHideFlags: 0
@@ -1371,8 +1371,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelection
   unlocked: 0
   unlockImage: {fileID: 1451080153}
-  clearImage: {fileID: 0}
-  levelSceneName: 
+  clearImage: {fileID: 952442612}
+  levelSceneName: Level 8
 --- !u!1 &683313254
 GameObject:
   m_ObjectHideFlags: 0
@@ -1522,8 +1522,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelection
   unlocked: 0
   unlockImage: {fileID: 302641437}
-  clearImage: {fileID: 0}
-  levelSceneName: 
+  clearImage: {fileID: 2119685061}
+  levelSceneName: Level 10
 --- !u!1 &755234340
 GameObject:
   m_ObjectHideFlags: 0
@@ -1673,8 +1673,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelection
   unlocked: 0
   unlockImage: {fileID: 841793297}
-  clearImage: {fileID: 0}
-  levelSceneName: 
+  clearImage: {fileID: 2142865626}
+  levelSceneName: Level 6
 --- !u!1 &773478539
 GameObject:
   m_ObjectHideFlags: 0
@@ -1788,7 +1788,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1071, y: 509}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &801679067
@@ -2053,8 +2053,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelection
   unlocked: 0
   unlockImage: {fileID: 977702108}
-  clearImage: {fileID: 0}
-  levelSceneName: 
+  clearImage: {fileID: 355272602}
+  levelSceneName: Level 5
 --- !u!1 &880268706
 GameObject:
   m_ObjectHideFlags: 0
@@ -2250,7 +2250,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1078, y: 647}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &952442612
@@ -2400,7 +2400,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -118, y: 199}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1047387517
@@ -2475,7 +2475,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -914, y: 555}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1068535080
@@ -2797,8 +2797,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelection
   unlocked: 0
   unlockImage: {fileID: 187520471}
-  clearImage: {fileID: 0}
-  levelSceneName: 
+  clearImage: {fileID: 801679067}
+  levelSceneName: Level 9
 --- !u!1 &1359293813
 GameObject:
   m_ObjectHideFlags: 0
@@ -3024,7 +3024,7 @@ MonoBehaviour:
   unlocked: 1
   unlockImage: {fileID: 1667398738}
   clearImage: {fileID: 1884142287}
-  levelSceneName: 
+  levelSceneName: Level 1
 --- !u!1 &1451080151
 GameObject:
   m_ObjectHideFlags: 0
@@ -3324,8 +3324,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelection
   unlocked: 0
   unlockImage: {fileID: 1359293815}
-  clearImage: {fileID: 0}
-  levelSceneName: 
+  clearImage: {fileID: 1047387517}
+  levelSceneName: Level 3
 --- !u!1 &1863094121
 GameObject:
   m_ObjectHideFlags: 0
@@ -3475,8 +3475,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelection
   unlocked: 0
   unlockImage: {fileID: 410653068}
-  clearImage: {fileID: 0}
-  levelSceneName: 
+  clearImage: {fileID: 84912451}
+  levelSceneName: Level 4
 --- !u!1 &1884142285
 GameObject:
   m_ObjectHideFlags: 0
@@ -3701,8 +3701,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::LevelSelection
   unlocked: 0
   unlockImage: {fileID: 264684747}
-  clearImage: {fileID: 0}
-  levelSceneName: 
+  clearImage: {fileID: 1068535080}
+  levelSceneName: Level 7
 --- !u!1 &2119685059
 GameObject:
   m_ObjectHideFlags: 0
@@ -3737,7 +3737,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -1204, y: 447}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2119685061
@@ -3812,7 +3812,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -540, y: 547}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2142865626

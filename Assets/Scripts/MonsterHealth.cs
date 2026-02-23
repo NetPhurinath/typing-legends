@@ -14,6 +14,9 @@ public class MonsterHealth : MonoBehaviour
     [Header("UI (optional)")]
     [SerializeField] private MonsterPortraitUI portraitUI;
 
+    [Header("SFX (optional)")]
+    [SerializeField] private SfxPlayer sfxPlayer;
+
     private int currentHealth;
     private bool isDead;
 
@@ -46,6 +49,9 @@ public class MonsterHealth : MonoBehaviour
                 gameOverScreen = Object.FindFirstObjectByType<GameOverScreen>(FindObjectsInactive.Include);
         }
 
+        if (sfxPlayer == null)
+            sfxPlayer = Object.FindFirstObjectByType<SfxPlayer>(FindObjectsInactive.Include);
+
         if (maxHealth < 1) maxHealth = 1;
         currentHealth = maxHealth;
         HealthChanged?.Invoke(currentHealth, maxHealth);
@@ -70,6 +76,7 @@ public class MonsterHealth : MonoBehaviour
         currentHealth -= amount;
 
         if (portraitUI != null) portraitUI.PlayHit();
+        if (sfxPlayer != null) sfxPlayer.PlayPlayerHitMonster();
 
         if (currentHealth <= 0)
         {
