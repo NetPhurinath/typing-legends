@@ -4758,6 +4758,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 725d74729663b3f429dd5e710028f642, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wordbank
+  bucketCount: 3
+  skillEmaAlpha: 0.2
+  selectorSettings:
+    wpmMin: 10
+    wpmMax: 45
+    accuracyMin: 0.75
+    accuracyMax: 0.97
+    wpmWeight: 0.6
+    neighborChance: 0.15
+    randomBucketChance: 0.05
+  debugHasSamples: 0
+  debugEstimatedWpm: 0
+  debugEstimatedAccuracy: 0
 --- !u!4 &2072567513
 Transform:
   m_ObjectHideFlags: 0

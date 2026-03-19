@@ -1865,6 +1865,7 @@ MonoBehaviour:
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
   portraitUI: {fileID: 0}
+  sfxPlayer: {fileID: 0}
 --- !u!114 &766983550
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1882,8 +1883,8 @@ MonoBehaviour:
   hitSprite: {fileID: 4296843936858717165, guid: bb621e4130b7adf44a2947f5efd92c62, type: 3}
   attackSprite: {fileID: -3515253027986610511, guid: 5fb0501159b06e44499bfce3b4ebab79, type: 3}
   defeatSprite: {fileID: 4259842506288186066, guid: c4087686b7f9a954cb2879e8f87e408c, type: 3}
-  hitDuration: 0.15
-  attackDuration: 0.2
+  hitDuration: 0.4
+  attackDuration: 0.5
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
@@ -3931,6 +3932,7 @@ MonoBehaviour:
   maxHealth: 3
   gameOverScreen: {fileID: 0}
   typer: {fileID: 0}
+  sfxPlayer: {fileID: 0}
 --- !u!114 &1551650121
 MonoBehaviour:
   m_ObjectHideFlags: 0
