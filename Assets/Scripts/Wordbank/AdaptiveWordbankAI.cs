@@ -28,6 +28,10 @@ public abstract class AdaptiveWordbankAI : MonoBehaviour
     // Override in a specific Wordbank to keep it from auto-loading the shared tiered list.
     protected virtual bool AutoLoadDefaultTieredListFromResources => true;
 
+    // Override in a specific Wordbank to load a different tiered list per level/group.
+    // Return empty/null to disable auto-loading without touching the inspector.
+    protected virtual string DefaultTieredListResourcesPath => "Wordbanks/Ramayana_TieredList";
+
     protected virtual void Awake()
     {
         InitializeIfNeeded();
@@ -74,7 +78,11 @@ public abstract class AdaptiveWordbankAI : MonoBehaviour
 
         // If not assigned in the Inspector, try the default Resources asset.
         if (tieredList == null && AutoLoadDefaultTieredListFromResources)
-            tieredList = Resources.Load<WordbankTieredList>("Wordbanks/Ramayana_TieredList");
+        {
+            var path = DefaultTieredListResourcesPath;
+            if (!string.IsNullOrEmpty(path))
+                tieredList = Resources.Load<WordbankTieredList>(path);
+        }
 
         // Prefer explicit tier buckets (easy/medium/hard) if provided
         if (tieredList != null)

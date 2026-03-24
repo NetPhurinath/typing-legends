@@ -10,4 +10,6 @@ public class Wordbank6 : AdaptiveWordbankAI
     };
 
     protected override IReadOnlyList<string> OriginalWords => words;
+
+    protected override string DefaultTieredListResourcesPath => "Wordbanks/Ramayana_TieredList_7_10";
 }

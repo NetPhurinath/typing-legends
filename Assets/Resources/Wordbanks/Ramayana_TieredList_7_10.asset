@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7e2e7bff64fa2bb4da8ba1537f918843, type: 3}
-  m_Name: Ramayana_TieredList
+  m_Name: Ramayana_TieredList_7_10
   m_EditorClassIdentifier: 
   easy:
   - "วานร"
