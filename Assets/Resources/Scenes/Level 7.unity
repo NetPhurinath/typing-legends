@@ -236,7 +236,7 @@ MonoBehaviour:
   foodOutput: {fileID: 332442353}
   pointsPerWord: 50
   countdownTime: 5
-  playerHealth: {fileID: 0}
+  playerHealth: {fileID: 1494482853}
   monsterHealth: {fileID: 766983549}
   monsterDamagePerCorrectWord: 1
   monsterPortraitUI: {fileID: 0}
@@ -2915,7 +2915,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6492757425abe64dae8b8cf247c9e92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartUI
-  playerHealth: {fileID: 0}
+  playerHealth: {fileID: 1494482853}
   hearts:
   - {fileID: 1432336496}
   - {fileID: 1973933677}
@@ -3797,8 +3797,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 3
-  gameOverScreen: {fileID: 0}
-  typer: {fileID: 0}
+  gameOverScreen: {fileID: 1081749083}
+  typer: {fileID: 203963479}
   sfxPlayer: {fileID: 0}
 --- !u!114 &1494482854
 MonoBehaviour:
@@ -4773,6 +4773,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ef190a17ad9284c4caabab90460ec77d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Wordbank6
+  tieredList: {fileID: 0}
+  bucketCount: 3
+  skillEmaAlpha: 0.2
+  selectorSettings:
+    wpmMin: 10
+    wpmMax: 45
+    accuracyMin: 0.75
+    accuracyMax: 0.97
+    wpmWeight: 0.6
+    neighborChance: 0.15
+    randomBucketChance: 0.05
+  debugHasSamples: 0
+  debugEstimatedWpm: 0
+  debugEstimatedAccuracy: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
