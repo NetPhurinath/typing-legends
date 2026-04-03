@@ -21,45 +21,48 @@ public class Typer : MonoBehaviour
     [Header("Food Icon")]
     [SerializeField] private GameObject foodIcon;
 
+    [Header("Item (tomyumshrimp)")]
+    [SerializeField] private TomyumShrimpItem tomyumShrimpItem;
+
     [Header("Food")]
-    [SerializeField] private int maxFood = 3;
-    [SerializeField] private int healPerFood = 1;
+    [SerializeField] private int maxFood =3;
+
+    // Kept for backwards compatibility / UI balancing. If an item is assigned,
+    // the item's own healAmount will be used.
+    [SerializeField] private int healPerFood =1;
+
     [Header("Food UI")]
     [SerializeField] private TMP_Text foodOutput;
 
-    private int currentFood = 0;
+    private int currentFood =0;
 
     private string remainingWord = string.Empty;
     private string currentWord = string.Empty;
-    private int typedCount = 0;
-    private int mistakesThisWord = 0;
-    private float wordStartTime = 0f;
-    private int score = 0;
+    private int typedCount =0;
+    private int score =0;
 
     public int Score => score;
 
-    public int pointsPerWord = 50;
-    public float countdownTime = 5f;
+    public int pointsPerWord =50;
+    public float countdownTime =5f;
     private float timer;
     private bool isGameOver = false;
 
     private object resolvedWordbank = null;
     private MethodInfo resolvedGetWordMethod = null;
-    private MethodInfo resolvedOnWordStartedMethod = null;
-    private MethodInfo resolvedOnWordResultMethod = null;
 
     [Header("Health (optional)")]
     [SerializeField] private PlayerHealth playerHealth;
 
     [Header("Monster (optional)")]
     [SerializeField] private MonsterHealth monsterHealth;
-    [SerializeField] private int monsterDamagePerCorrectWord = 1;
+    [SerializeField] private int monsterDamagePerCorrectWord =1;
 
     [Header("Monster Portrait (optional)")]
     [SerializeField] private MonsterPortraitUI monsterPortraitUI;
 
     [Header("Time limit damage")]
-    [SerializeField] private int slowWordDamage = 1;
+    [SerializeField] private int slowWordDamage =1;
 
     private void Awake()
     {
@@ -82,6 +85,9 @@ public class Typer : MonoBehaviour
 
         if (monsterPortraitUI == null)
             monsterPortraitUI = Object.FindFirstObjectByType<MonsterPortraitUI>(FindObjectsInactive.Include);
+
+        if (tomyumShrimpItem == null)
+            tomyumShrimpItem = Object.FindFirstObjectByType<TomyumShrimpItem>(FindObjectsInactive.Include);
     }
 
     private void Start()
@@ -116,7 +122,6 @@ public class Typer : MonoBehaviour
         }
 
         typedCount = 0;
-        mistakesThisWord = 0;
         currentWord = GetWordFromResolvedProvider();
 
         if (string.IsNullOrEmpty(currentWord))
@@ -127,8 +132,6 @@ public class Typer : MonoBehaviour
         }
 
         SetRemainingWord(currentWord);
-        wordStartTime = Time.time;
-        NotifyWordStarted(currentWord);
         ResetTimer();
     }
 
@@ -140,10 +143,7 @@ public class Typer : MonoBehaviour
         if (wordbankBehaviour != null)
         {
             if (TryResolveFromBehaviour(wordbankBehaviour, out resolvedWordbank, out resolvedGetWordMethod))
-            {
-                ResolveOptionalWordHooks(resolvedWordbank);
                 return true;
-            }
 
             Debug.LogError("Typer: 'wordbankBehaviour' is set but does not have a GetWord() method that returns string.");
             return false;
@@ -154,7 +154,6 @@ public class Typer : MonoBehaviour
         {
             resolvedWordbank = wordbank;
             resolvedGetWordMethod = null;
-            ResolveOptionalWordHooks(resolvedWordbank);
             return true;
         }
 
@@ -167,70 +166,11 @@ public class Typer : MonoBehaviour
             if (!typeName.StartsWith("Wordbank")) continue;
 
             if (TryResolveFromBehaviour(behaviour, out resolvedWordbank, out resolvedGetWordMethod))
-            {
-                ResolveOptionalWordHooks(resolvedWordbank);
                 return true;
-            }
         }
 
         Debug.LogError("Typer: No Wordbank component found. Assign a Wordbank/WordbankX on this GameObject or drag it into 'Wordbank Behaviour'.");
         return false;
-    }
-
-    private void ResolveOptionalWordHooks(object provider)
-    {
-        resolvedOnWordStartedMethod = null;
-        resolvedOnWordResultMethod = null;
-
-        if (provider == null) return;
-
-        var type = provider.GetType();
-
-        resolvedOnWordStartedMethod = type.GetMethod(
-            "OnWordStarted",
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-            binder: null,
-            types: new[] { typeof(string) },
-            modifiers: null
-        );
-
-        resolvedOnWordResultMethod = type.GetMethod(
-            "OnWordResult",
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-            binder: null,
-            types: new[] { typeof(string), typeof(float), typeof(int), typeof(bool) },
-            modifiers: null
-        );
-    }
-
-    private void NotifyWordStarted(string word)
-    {
-        if (resolvedWordbank == null) return;
-        if (resolvedOnWordStartedMethod == null) return;
-
-        try
-        {
-            resolvedOnWordStartedMethod.Invoke(resolvedWordbank, new object[] { word });
-        }
-        catch
-        {
-            // Ignore optional hook failures
-        }
-    }
-
-    private void NotifyWordResult(string word, float timeTakenSeconds, int mistakes, bool completed)
-    {
-        if (resolvedWordbank == null) return;
-        if (resolvedOnWordResultMethod == null) return;
-
-        try
-        {
-            resolvedOnWordResultMethod.Invoke(resolvedWordbank, new object[] { word, timeTakenSeconds, mistakes, completed });
-        }
-        catch
-        {
-            // Ignore optional hook failures
-        }
     }
 
     private static bool TryResolveFromBehaviour(MonoBehaviour behaviour, out object provider, out MethodInfo getWordMethod)
@@ -311,9 +251,6 @@ public class Typer : MonoBehaviour
 
             if (IsWordComplete())
             {
-                var timeTaken = Mathf.Max(0.01f, Time.time - wordStartTime);
-                NotifyWordResult(currentWord, timeTaken, mistakesThisWord, completed: true);
-
                 AddPoint(pointsPerWord);
 
                 if (monsterHealth != null)
@@ -332,7 +269,7 @@ public class Typer : MonoBehaviour
         }
         else
         {
-            mistakesThisWord++;
+            // wrong letter: no damage currently
         }
     }
 
@@ -385,8 +322,6 @@ public class Typer : MonoBehaviour
     private void OnWordTimedOut()
     {
         if (isGameOver) return;
-
-        NotifyWordResult(currentWord, countdownTime, mistakesThisWord, completed: false);
 
         // Monster attacks when you're too slow
         if (monsterPortraitUI != null)
@@ -453,11 +388,22 @@ public class Typer : MonoBehaviour
     private void ConsumeFood()
     {
         if (playerHealth == null) return;
-        if (currentFood <= 0) return;
+        if (currentFood <=0) return;
         if (IsHealthFull()) return;
 
         currentFood--;
-        playerHealth.Heal(healPerFood);
+
+        // Prefer the separated item behaviour when present.
+        if (tomyumShrimpItem != null)
+        {
+            // If for some reason the item refuses to use, fall back.
+            if (!tomyumShrimpItem.TryUse(playerHealth))
+                playerHealth.Heal(healPerFood);
+        }
+        else
+        {
+            playerHealth.Heal(healPerFood);
+        }
 
         UpdateFoodDisplay();
         UpdateFoodIcon();

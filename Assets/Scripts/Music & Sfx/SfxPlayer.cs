@@ -29,6 +29,14 @@ public class SfxPlayer : MonoBehaviour
  PlayOneShot(monsterHitPlayerClip);
  }
 
+ /// <summary>
+ /// Play an arbitrary one-shot clip via the configured AudioSource.
+ /// </summary>
+ public void PlayClip(AudioClip clip)
+ {
+ PlayOneShot(clip);
+ }
+
  private void PlayOneShot(AudioClip clip)
  {
  if (clip == null) return;

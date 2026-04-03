@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 10a235c6ea2ce1345a24316c4f3339a3
+guid: db0d75986ffc7a949bd3b9fdfc793438
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 5156462137814070502
-    second: Gemini_Generated_Image_d17exkd17exkd17e_0
+      213: -1624618171913359435
+    second: pause button_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -113,13 +113,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Gemini_Generated_Image_d17exkd17exkd17e_0
+      name: pause button_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 1376
-        height: 768
+        x: 9
+        y: 13
+        width: 1045
+        height: 1041
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -128,8 +128,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 6e4b8268efe6f8740800000000000000
-      internalID: 5156462137814070502
+      spriteID: 5bfa57751623479e0800000000000000
+      internalID: -1624618171913359435
       vertices: []
       indices: 
       edges: []
@@ -148,7 +148,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Gemini_Generated_Image_d17exkd17exkd17e_0: 5156462137814070502
+      pause button_0: -1624618171913359435
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

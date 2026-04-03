@@ -68,7 +68,20 @@ public partial class GameOverScreen : MonoBehaviour
 
     private float previousTimeScale = 1f;
     private bool showingWin;
+
+    /// <summary>
+    /// True when this screen is currently showing the WIN state (set by Show(points, isWin)).
+    /// </summary>
+    public bool IsWin => showingWin;
+
     private bool hasExplicitPoints;
+
+    /// <summary>
+    /// True after Show(points, ...) has been called at least once since last disable.
+    /// Useful for detecting "real" end-screen display vs being enabled/hidden at scene start.
+    /// </summary>
+    public bool HasExplicitPoints => hasExplicitPoints;
+
     private int lastShownPoints;
     private bool restartHooked;
     private bool mainMenuHooked;
