@@ -897,6 +897,9 @@ PrefabInstance:
       addedObject: {fileID: 298136440}
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 298136443}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 298136442}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
 --- !u!4 &298136429 stripped
@@ -1029,6 +1032,21 @@ MonoBehaviour:
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
   sfxPlayer: {fileID: 0}
+--- !u!114 &298136443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 298136439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf44d3390335c7644aee3ff23c58b177, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  typerScript: {fileID: 203963479}
+  anim: {fileID: 298136440}
+  attackDuration: 1
 --- !u!1 &305632453
 GameObject:
   m_ObjectHideFlags: 0
@@ -2334,8 +2352,8 @@ MonoBehaviour:
   hitSprite: {fileID: -4436836631913940989, guid: 913bf758dafd5d2469c2ea333238a1c6, type: 3}
   attackSprite: {fileID: 4448060961254937349, guid: bd1d99bd8339251469118ad6d047d667, type: 3}
   defeatSprite: {fileID: 6215954471321655145, guid: a94f6870436c2dd4d9896979af1aaa4c, type: 3}
-  hitDuration: 0.4
-  attackDuration: 0.5
+  hitDuration: 1
+  attackDuration: 1
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
@@ -4684,7 +4702,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1376547121}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:

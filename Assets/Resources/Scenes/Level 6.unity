@@ -543,6 +543,9 @@ PrefabInstance:
       addedObject: {fileID: 126732468}
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 126732470}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 126732467}
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
       insertIndex: -1
@@ -678,6 +681,21 @@ MonoBehaviour:
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
   sfxPlayer: {fileID: 0}
+--- !u!114 &126732470
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 126732466}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf44d3390335c7644aee3ff23c58b177, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  typerScript: {fileID: 203963479}
+  anim: {fileID: 126732467}
+  attackDuration: 1
 --- !u!1 &185212107
 GameObject:
   m_ObjectHideFlags: 0
@@ -2403,8 +2421,8 @@ MonoBehaviour:
   hitSprite: {fileID: -6001452190013978634, guid: 85e755d011b6a7f459eee46015e22f3f, type: 3}
   attackSprite: {fileID: 21300000, guid: 6a33284ff3631394dbed0b4c093ba7aa, type: 3}
   defeatSprite: {fileID: 21300000, guid: 0f37b5845443b8043864daf32e766d9c, type: 3}
-  hitDuration: 0.4
-  attackDuration: 0.5
+  hitDuration: 1
+  attackDuration: 1
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0

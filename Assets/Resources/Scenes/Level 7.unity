@@ -2361,8 +2361,8 @@ MonoBehaviour:
   hitSprite: {fileID: -7519062800985255506, guid: e3b3362d60345954c95a42c24a546e9f, type: 3}
   attackSprite: {fileID: 2196085671973841670, guid: 06c3b51a6d86fb84db84103dcc614602, type: 3}
   defeatSprite: {fileID: 6378620528955523683, guid: 055d501387729cc4f9e11214ea1c2274, type: 3}
-  hitDuration: 0.4
-  attackDuration: 0.5
+  hitDuration: 1
+  attackDuration: 1
 --- !u!1 &769472089
 GameObject:
   m_ObjectHideFlags: 0
@@ -3509,6 +3509,9 @@ PrefabInstance:
       addedObject: {fileID: 1014261771}
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 1014261773}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 1014261770}
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
       insertIndex: -1
@@ -3644,6 +3647,21 @@ MonoBehaviour:
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
   sfxPlayer: {fileID: 0}
+--- !u!114 &1014261773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1014261769}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf44d3390335c7644aee3ff23c58b177, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  typerScript: {fileID: 203963479}
+  anim: {fileID: 1014261770}
+  attackDuration: 1
 --- !u!1 &1081749081
 GameObject:
   m_ObjectHideFlags: 0
@@ -3993,7 +4011,7 @@ MonoBehaviour:
   m_VertexBufferAutoSizeReduction: 0
   m_useMaxVisibleDescender: 1
   m_pageToDisplay: 1
-  m_margin: {x: 0, y: 0, z: 0, w: 0}
+  m_margin: {x: -514.3686, y: 0, z: -511.52878, w: 0}
   m_isUsingLegacyAnimationComponent: 0
   m_isVolumetricText: 0
   m_hasFontAssetChanged: 0

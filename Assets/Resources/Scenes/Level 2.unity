@@ -2816,8 +2816,8 @@ MonoBehaviour:
   hitSprite: {fileID: 8811864471365585228, guid: 7c01c243c966f2d4d80079f6aecabbbe, type: 3}
   attackSprite: {fileID: 7487172780191830817, guid: 7a6fc6c2ccb1c054a93ac2770ac1f866, type: 3}
   defeatSprite: {fileID: 5840534335826768597, guid: 3cc3fadeb681e65479cb66877c9cfb2f, type: 3}
-  hitDuration: 0.4
-  attackDuration: 0.5
+  hitDuration: 1
+  attackDuration: 1
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
@@ -7141,6 +7141,9 @@ PrefabInstance:
       addedObject: {fileID: 2132272799}
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 2132272801}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 2132272798}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
 --- !u!4 &2132272787 stripped
@@ -7273,6 +7276,21 @@ MonoBehaviour:
     showGizmo: 1
   - color: {r: 0, g: 1, b: 0, a: 1}
     showGizmo: 1
+--- !u!114 &2132272801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2132272797}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf44d3390335c7644aee3ff23c58b177, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  typerScript: {fileID: 203963479}
+  anim: {fileID: 2132272799}
+  attackDuration: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
