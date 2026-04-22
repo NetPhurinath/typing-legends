@@ -3998,7 +3998,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: -150}
+  m_AnchoredPosition: {x: 0, y: -30}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1208190993
@@ -4013,7 +4013,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6492757425abe64dae8b8cf247c9e92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartUI
-  playerHealth: {fileID: 0}
+  playerHealth: {fileID: 1399919854}
   hearts:
   - {fileID: 1432336496}
   - {fileID: 1973933677}
@@ -5427,8 +5427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 3
-  gameOverScreen: {fileID: 0}
-  typer: {fileID: 0}
+  gameOverScreen: {fileID: 1081749083}
+  typer: {fileID: 203963479}
   sfxPlayer: {fileID: 0}
 --- !u!1 &1432336494
 GameObject:

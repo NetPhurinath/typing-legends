@@ -888,6 +888,7 @@ GameObject:
   - component: {fileID: 721285442}
   - component: {fileID: 721285445}
   - component: {fileID: 721285446}
+  - component: {fileID: 721285447}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1025,6 +1026,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 88319df82942a5a49b1ae93aa8c22504, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GoToMenu
+--- !u!114 &721285447
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 721285441}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9b9968b8ad51ff849af3c233a1c30655, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::VolumeSetting
+  volumeSlider: {fileID: 1887943871}
 --- !u!1 &774136936
 GameObject:
   m_ObjectHideFlags: 0
@@ -2275,10 +2289,10 @@ MonoBehaviour:
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: VolumeProxy, Assembly-CSharp
-        m_MethodName: SetVolume
-        m_Mode: 4
+      - m_Target: {fileID: 721285447}
+        m_TargetAssemblyTypeName: VolumeSetting, Assembly-CSharp
+        m_MethodName: ChangeVolume
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

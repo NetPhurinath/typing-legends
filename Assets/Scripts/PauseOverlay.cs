@@ -71,6 +71,9 @@ public class PauseOverlay : MonoBehaviour
 
  private Page currentPage = Page.Main;
 
+ // Track whether we requested BGM pause (so we can safely resume).
+ private bool bgmPausedByThis;
+
  private void Awake()
  {
  // Ensure we can hide/show without disabling the GameObject.
@@ -121,6 +124,13 @@ public class PauseOverlay : MonoBehaviour
  previousTimeScale = Time.timeScale;
  Time.timeScale =0f;
 
+ // Silence BGM while paused.
+ if (!bgmPausedByThis && MusicManager.Instance != null)
+ {
+ MusicManager.Instance.PauseBgm();
+ bgmPausedByThis = true;
+ }
+
  isPaused = true;
  if (backgroundOverlay != null) backgroundOverlay.SetActive(true);
  SetPanelVisible(true);
@@ -133,6 +143,13 @@ public class PauseOverlay : MonoBehaviour
  isPaused = false;
  if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
  SetPanelVisible(false);
+
+ // Resume BGM when leaving pause overlay.
+ if (bgmPausedByThis && MusicManager.Instance != null)
+ {
+ MusicManager.Instance.ResumeBgm();
+ bgmPausedByThis = false;
+ }
 
  Time.timeScale = previousTimeScale;
  }

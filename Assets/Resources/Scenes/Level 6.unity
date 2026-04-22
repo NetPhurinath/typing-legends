@@ -675,8 +675,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 3
-  gameOverScreen: {fileID: 0}
-  typer: {fileID: 0}
+  gameOverScreen: {fileID: 1081749083}
+  typer: {fileID: 203963479}
   sfxPlayer: {fileID: 0}
 --- !u!1 &185212107
 GameObject:
@@ -4265,7 +4265,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6492757425abe64dae8b8cf247c9e92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartUI
-  playerHealth: {fileID: 0}
+  playerHealth: {fileID: 126732469}
   hearts:
   - {fileID: 1432336496}
   - {fileID: 1973933677}
@@ -5303,7 +5303,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1458405921
 RectTransform:
   m_ObjectHideFlags: 0

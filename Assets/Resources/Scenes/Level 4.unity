@@ -616,8 +616,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 3
-  gameOverScreen: {fileID: 0}
-  typer: {fileID: 0}
+  gameOverScreen: {fileID: 1081749083}
+  typer: {fileID: 203963479}
   sfxPlayer: {fileID: 0}
 --- !u!95 &91871830
 Animator:
@@ -4293,7 +4293,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d6492757425abe64dae8b8cf247c9e92, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HeartUI
-  playerHealth: {fileID: 0}
+  playerHealth: {fileID: 91871829}
   hearts:
   - {fileID: 1432336496}
   - {fileID: 1973933677}
@@ -5040,7 +5040,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 1592752314}
         m_TargetAssemblyTypeName: PauseOverlay, Assembly-CSharp
         m_MethodName: Pause
         m_Mode: 1

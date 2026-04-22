@@ -69,6 +69,9 @@ public partial class GameOverScreen : MonoBehaviour
     private float previousTimeScale = 1f;
     private bool showingWin;
 
+    // Mute/unmute BGM when this overlay is visible.
+    private bool bgmPausedByThis;
+
     /// <summary>
     /// True when this screen is currently showing the WIN state (set by Show(points, isWin)).
     /// </summary>
@@ -116,6 +119,9 @@ public partial class GameOverScreen : MonoBehaviour
         // Start hidden
         SetPanelVisible(false);
         if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
+
+        // Ensure we don't keep BGM paused if this object is reloaded/disabled unexpectedly.
+        bgmPausedByThis = false;
 
         EnsureButtonHooks();
 
@@ -167,6 +173,9 @@ public partial class GameOverScreen : MonoBehaviour
     {
         // Next time we open, allow auto-fetch to populate if Show() isn't called.
         hasExplicitPoints = false;
+
+        // Safety: if disabled while visible, resume BGM.
+        ResumeBgmIfNeeded();
     }
 
 
@@ -255,6 +264,9 @@ public partial class GameOverScreen : MonoBehaviour
         if (backgroundOverlay != null) backgroundOverlay.SetActive(true);
         SetPanelVisible(true);
 
+        // Silence BGM once the overlay is actually shown.
+        PauseBgmIfNeeded();
+
         showRoutine = null;
     }
 
@@ -293,6 +305,28 @@ public partial class GameOverScreen : MonoBehaviour
 
         SetPanelVisible(false);
         if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
+
+        // Resume BGM when leaving overlay.
+        ResumeBgmIfNeeded();
+
         Time.timeScale = previousTimeScale;
+    }
+
+    private void PauseBgmIfNeeded()
+    {
+        if (bgmPausedByThis) return;
+        if (MusicManager.Instance == null) return;
+
+        MusicManager.Instance.PauseBgm();
+        bgmPausedByThis = true;
+    }
+
+    private void ResumeBgmIfNeeded()
+    {
+        if (!bgmPausedByThis) return;
+        if (MusicManager.Instance == null) return;
+
+        MusicManager.Instance.ResumeBgm();
+        bgmPausedByThis = false;
     }
 }

@@ -12,6 +12,9 @@ public class MusicManager : MonoBehaviour
 
     private AudioSource current;
 
+    // Tracks nested mute requests (pause overlay + game over overlay etc.)
+    private int pauseRequests;
+
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -54,6 +57,45 @@ public class MusicManager : MonoBehaviour
         SwitchTo(cityMusic);
     }
 
+    /// <summary>
+    /// Temporarily silence the current BGM (used by pause/game-over overlays).
+    /// Supports nesting: multiple PauseBgm() calls require the same number of ResumeBgm() calls.
+    /// </summary>
+    public void PauseBgm()
+    {
+        pauseRequests++;
+        ApplyPauseState();
+    }
+
+    /// <summary>
+    /// Undo a PauseBgm() request.
+    /// </summary>
+    public void ResumeBgm()
+    {
+        pauseRequests = Mathf.Max(0, pauseRequests -1);
+        ApplyPauseState();
+    }
+
+    private void ApplyPauseState()
+    {
+        if (current == null) return;
+
+        bool shouldMute = pauseRequests >0;
+
+        // Use Pause/UnPause so playback resumes where it left off.
+        if (shouldMute)
+        {
+            if (current.isPlaying)
+                current.Pause();
+        }
+        else
+        {
+            // Only unpause if we have a clip assigned.
+            if (current.clip != null)
+                current.UnPause();
+        }
+    }
+
     void SwitchTo(AudioSource next)
     {
         if (next == null) return;
@@ -65,5 +107,8 @@ public class MusicManager : MonoBehaviour
         current = next;
         current.loop = true;
         current.Play();
+
+        // If we're currently paused by an overlay, keep BGM silenced.
+        ApplyPauseState();
     }
 }
