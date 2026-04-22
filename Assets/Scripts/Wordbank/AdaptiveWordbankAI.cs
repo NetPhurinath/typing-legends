@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -22,6 +23,7 @@ public abstract class AdaptiveWordbankAI : MonoBehaviour
 
     private WordBag[] buckets;
     private bool initialized;
+    private string lastWord;
 
     protected abstract IReadOnlyList<string> OriginalWords { get; }
 
@@ -56,7 +58,12 @@ public abstract class AdaptiveWordbankAI : MonoBehaviour
         {
             int idx = (chosen + attempt) % buckets.Length;
             if (buckets[idx] != null && buckets[idx].Count > 0)
-                return buckets[idx].GetNext();
+            {
+                var word = buckets[idx].GetNext(avoidWord: lastWord);
+                if (!string.IsNullOrEmpty(word))
+                    lastWord = word;
+                return word;
+            }
         }
 
         return string.Empty;
@@ -107,6 +114,7 @@ public abstract class AdaptiveWordbankAI : MonoBehaviour
         private readonly List<string> original;
         private readonly List<string> bag;
         private int index;
+        private string lastReturned;
 
         public int Count => original?.Count ?? 0;
 
@@ -117,15 +125,18 @@ public abstract class AdaptiveWordbankAI : MonoBehaviour
             RefillAndShuffle();
         }
 
-        public string GetNext()
+        public string GetNext(string avoidWord)
         {
             if (bag.Count == 0) return string.Empty;
 
             if (index >= bag.Count)
                 RefillAndShuffle();
 
+            EnsureNotImmediateRepeat(avoidWord);
+
             var word = bag[index];
             index++;
+            lastReturned = word;
             return word;
         }
 
@@ -137,11 +148,41 @@ public abstract class AdaptiveWordbankAI : MonoBehaviour
             index = 0;
         }
 
+        private void EnsureNotImmediateRepeat(string avoidWord)
+        {
+            if (bag.Count <= 1) return;
+            if (index < 0 || index >= bag.Count) return;
+
+            bool mustAvoid = false;
+            string current = bag[index];
+
+            if (!string.IsNullOrEmpty(lastReturned) && string.Equals(current, lastReturned, StringComparison.Ordinal))
+                mustAvoid = true;
+            if (!string.IsNullOrEmpty(avoidWord) && string.Equals(current, avoidWord, StringComparison.Ordinal))
+                mustAvoid = true;
+
+            if (!mustAvoid) return;
+
+            for (int j = index + 1; j < bag.Count; j++)
+            {
+                var candidate = bag[j];
+                if (!string.IsNullOrEmpty(lastReturned) && string.Equals(candidate, lastReturned, StringComparison.Ordinal))
+                    continue;
+                if (!string.IsNullOrEmpty(avoidWord) && string.Equals(candidate, avoidWord, StringComparison.Ordinal))
+                    continue;
+
+                {
+                    (bag[index], bag[j]) = (bag[j], bag[index]);
+                    return;
+                }
+            }
+        }
+
         private static void Shuffle(List<string> list)
         {
             for (int i = 0; i < list.Count; i++)
             {
-                int randomIndex = Random.Range(i, list.Count);
+                int randomIndex = UnityEngine.Random.Range(i, list.Count);
                 (list[i], list[randomIndex]) = (list[randomIndex], list[i]);
             }
         }

@@ -50,6 +50,10 @@ public class Typer : MonoBehaviour
 
     private object resolvedWordbank = null;
     private MethodInfo resolvedGetWordMethod = null;
+    private MethodInfo resolvedOnWordStartedMethod = null;
+    private MethodInfo resolvedOnWordResultMethod = null;
+
+    private int mistakesThisWord = 0;
 
     [Header("Health (optional)")]
     [SerializeField] private PlayerHealth playerHealth;
@@ -122,6 +126,7 @@ public class Typer : MonoBehaviour
         }
 
         typedCount = 0;
+        mistakesThisWord = 0;
         currentWord = GetWordFromResolvedProvider();
 
         if (string.IsNullOrEmpty(currentWord))
@@ -133,6 +138,8 @@ public class Typer : MonoBehaviour
 
         SetRemainingWord(currentWord);
         ResetTimer();
+
+        InvokeOnWordStarted(currentWord);
     }
 
     private bool ResolveWordbankProvider()
@@ -142,7 +149,12 @@ public class Typer : MonoBehaviour
         // 1) Explicit assignment: any MonoBehaviour with GetWord():string
         if (wordbankBehaviour != null)
         {
-            if (TryResolveFromBehaviour(wordbankBehaviour, out resolvedWordbank, out resolvedGetWordMethod))
+            if (TryResolveFromBehaviour(
+                    wordbankBehaviour,
+                    out resolvedWordbank,
+                    out resolvedGetWordMethod,
+                    out resolvedOnWordStartedMethod,
+                    out resolvedOnWordResultMethod))
                 return true;
 
             Debug.LogError("Typer: 'wordbankBehaviour' is set but does not have a GetWord() method that returns string.");
@@ -154,6 +166,8 @@ public class Typer : MonoBehaviour
         {
             resolvedWordbank = wordbank;
             resolvedGetWordMethod = null;
+            resolvedOnWordStartedMethod = null;
+            resolvedOnWordResultMethod = null;
             return true;
         }
 
@@ -165,7 +179,12 @@ public class Typer : MonoBehaviour
             var typeName = behaviour.GetType().Name;
             if (!typeName.StartsWith("Wordbank")) continue;
 
-            if (TryResolveFromBehaviour(behaviour, out resolvedWordbank, out resolvedGetWordMethod))
+                if (TryResolveFromBehaviour(
+                    behaviour,
+                    out resolvedWordbank,
+                    out resolvedGetWordMethod,
+                    out resolvedOnWordStartedMethod,
+                    out resolvedOnWordResultMethod))
                 return true;
         }
 
@@ -173,10 +192,17 @@ public class Typer : MonoBehaviour
         return false;
     }
 
-    private static bool TryResolveFromBehaviour(MonoBehaviour behaviour, out object provider, out MethodInfo getWordMethod)
+    private static bool TryResolveFromBehaviour(
+        MonoBehaviour behaviour,
+        out object provider,
+        out MethodInfo getWordMethod,
+        out MethodInfo onWordStartedMethod,
+        out MethodInfo onWordResultMethod)
     {
         provider = null;
         getWordMethod = null;
+        onWordStartedMethod = null;
+        onWordResultMethod = null;
 
         if (behaviour == null) return false;
 
@@ -192,8 +218,70 @@ public class Typer : MonoBehaviour
         if (getWordMethod == null) return false;
         if (getWordMethod.ReturnType != typeof(string)) return false;
 
+        // Optional hooks
+        onWordStartedMethod = type.GetMethod(
+            "OnWordStarted",
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+            binder: null,
+            types: new[] { typeof(string) },
+            modifiers: null
+        );
+        if (onWordStartedMethod != null && onWordStartedMethod.ReturnType != typeof(void))
+            onWordStartedMethod = null;
+
+        onWordResultMethod = type.GetMethod(
+            "OnWordResult",
+            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
+            binder: null,
+            types: new[] { typeof(string), typeof(float), typeof(int), typeof(bool) },
+            modifiers: null
+        );
+        if (onWordResultMethod != null && onWordResultMethod.ReturnType != typeof(void))
+            onWordResultMethod = null;
+
         provider = behaviour;
         return true;
+    }
+
+    private void InvokeOnWordStarted(string word)
+    {
+        if (string.IsNullOrEmpty(word)) return;
+        if (resolvedWordbank == null) return;
+
+        if (resolvedWordbank is AdaptiveWordbankAI adaptive)
+        {
+            adaptive.OnWordStarted(word);
+            return;
+        }
+
+        if (resolvedOnWordStartedMethod != null)
+            resolvedOnWordStartedMethod.Invoke(resolvedWordbank, new object[] { word });
+    }
+
+    private void InvokeOnWordResult(string word, float timeTakenSeconds, int mistakes, bool completed)
+    {
+        if (string.IsNullOrEmpty(word)) return;
+        if (resolvedWordbank == null) return;
+
+        if (resolvedWordbank is AdaptiveWordbankAI adaptive)
+        {
+            adaptive.OnWordResult(word, timeTakenSeconds, mistakes, completed);
+            return;
+        }
+
+        if (resolvedOnWordResultMethod != null)
+            resolvedOnWordResultMethod.Invoke(resolvedWordbank, new object[] { word, timeTakenSeconds, mistakes, completed });
+    }
+
+    private void NotifyWordResult(bool completed)
+    {
+        if (string.IsNullOrEmpty(currentWord)) return;
+
+        float timeTakenSeconds = completed
+            ? Mathf.Clamp(countdownTime - timer, 0.01f, countdownTime)
+            : Mathf.Max(0.01f, countdownTime);
+
+        InvokeOnWordResult(currentWord, timeTakenSeconds, mistakesThisWord, completed);
     }
 
     private string GetWordFromResolvedProvider()
@@ -251,6 +339,7 @@ public class Typer : MonoBehaviour
 
             if (IsWordComplete())
             {
+                NotifyWordResult(completed: true);
                 AddPoint(pointsPerWord);
 
                 if (monsterHealth != null)
@@ -270,6 +359,7 @@ public class Typer : MonoBehaviour
         else
         {
             // wrong letter: no damage currently
+            mistakesThisWord++;
         }
     }
 
@@ -322,6 +412,8 @@ public class Typer : MonoBehaviour
     private void OnWordTimedOut()
     {
         if (isGameOver) return;
+
+        NotifyWordResult(completed: false);
 
         // Monster attacks when you're too slow
         if (monsterPortraitUI != null)
