@@ -7,49 +7,64 @@ using UnityEngine;
 [DisallowMultipleComponent]
 public class SfxPlayer : MonoBehaviour
 {
- [Header("Audio")]
- [SerializeField] private AudioSource audioSource;
+    private const string SfxVolumeKey = "sfxVolume";
 
- [Header("Clips")]
- [SerializeField] private AudioClip playerHitMonsterClip;
- [SerializeField] private AudioClip monsterHitPlayerClip;
+    [Header("Audio")]
+    [SerializeField] private AudioSource audioSource;
 
- private void Awake()
- {
- if (audioSource == null) audioSource = GetComponent<AudioSource>();
- }
+    [Header("Clips")]
+    [SerializeField] private AudioClip playerHitMonsterClip;
+    [SerializeField] private AudioClip monsterHitPlayerClip;
 
- public void PlayPlayerHitMonster()
- {
- PlayOneShot(playerHitMonsterClip);
- }
+    private void Awake()
+    {
+        if (audioSource == null) audioSource = GetComponent<AudioSource>();
+        ApplySavedVolume();
+    }
 
- public void PlayMonsterHitPlayer()
- {
- PlayOneShot(monsterHitPlayerClip);
- }
+    public void SetVolume(float volume)
+    {
+        if (audioSource != null)
+            audioSource.volume = Mathf.Clamp01(volume);
+    }
 
- /// <summary>
- /// Play an arbitrary one-shot clip via the configured AudioSource.
- /// </summary>
- public void PlayClip(AudioClip clip)
- {
- PlayOneShot(clip);
- }
+    private void ApplySavedVolume()
+    {
+        float v = PlayerPrefs.GetFloat(SfxVolumeKey, 1f);
+        SetVolume(v);
+    }
 
- private void PlayOneShot(AudioClip clip)
- {
- if (clip == null) return;
+    public void PlayPlayerHitMonster()
+    {
+        PlayOneShot(playerHitMonsterClip);
+    }
 
- if (audioSource != null)
- {
- audioSource.PlayOneShot(clip);
- return;
- }
+    public void PlayMonsterHitPlayer()
+    {
+        PlayOneShot(monsterHitPlayerClip);
+    }
 
- // Fallback: play at listener position.
- var listener = FindFirstObjectByType<AudioListener>();
- if (listener != null)
- AudioSource.PlayClipAtPoint(clip, listener.transform.position);
- }
+    /// <summary>
+    /// Play an arbitrary one-shot clip via the configured AudioSource.
+    /// </summary>
+    public void PlayClip(AudioClip clip)
+    {
+        PlayOneShot(clip);
+    }
+
+    private void PlayOneShot(AudioClip clip)
+    {
+        if (clip == null) return;
+
+        if (audioSource != null)
+        {
+            audioSource.PlayOneShot(clip);
+            return;
+        }
+
+        // Fallback: play at listener position.
+        var listener = FindFirstObjectByType<AudioListener>();
+        if (listener != null)
+            AudioSource.PlayClipAtPoint(clip, listener.transform.position, PlayerPrefs.GetFloat(SfxVolumeKey, 1f));
+    }
 }
