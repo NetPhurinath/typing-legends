@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator AttackRoutine()
     {
         anim.SetBool("isAtk", true);
-        yield return new WaitForSeconds(attackDuration);
+        yield return new WaitForSecondsRealtime(attackDuration);
         anim.SetBool("isAtk", false);
     }
 }

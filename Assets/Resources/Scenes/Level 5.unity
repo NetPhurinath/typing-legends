@@ -897,6 +897,9 @@ PrefabInstance:
       addedObject: {fileID: 298136440}
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
       insertIndex: -1
+      addedObject: {fileID: 298136443}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
+      insertIndex: -1
       addedObject: {fileID: 298136442}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: 461dad7ef1949a54f99b69b28fe73caa, type: 3}
 --- !u!4 &298136429 stripped
@@ -966,7 +969,7 @@ Animator:
   m_Avatar: {fileID: 0}
   m_Controller: {fileID: 9100000, guid: 80544ae6d6251e349b5529f05e0b8263, type: 2}
   m_CullingMode: 0
-  m_UpdateMode: 0
+  m_UpdateMode: 2
   m_ApplyRootMotion: 0
   m_LinearVelocityBlending: 0
   m_StabilizeFeet: 0
@@ -1029,6 +1032,21 @@ MonoBehaviour:
   gameOverScreen: {fileID: 1081749083}
   typer: {fileID: 203963479}
   sfxPlayer: {fileID: 0}
+--- !u!114 &298136443
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 298136439}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf44d3390335c7644aee3ff23c58b177, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  typerScript: {fileID: 203963479}
+  anim: {fileID: 298136440}
+  attackDuration: 1
 --- !u!1 &305632453
 GameObject:
   m_ObjectHideFlags: 0
@@ -2334,8 +2352,8 @@ MonoBehaviour:
   hitSprite: {fileID: -4436836631913940989, guid: 913bf758dafd5d2469c2ea333238a1c6, type: 3}
   attackSprite: {fileID: 4448060961254937349, guid: bd1d99bd8339251469118ad6d047d667, type: 3}
   defeatSprite: {fileID: 6215954471321655145, guid: a94f6870436c2dd4d9896979af1aaa4c, type: 3}
-  hitDuration: 0.4
-  attackDuration: 0.5
+  hitDuration: 1
+  attackDuration: 1
 --- !u!1 &774382375
 GameObject:
   m_ObjectHideFlags: 0
@@ -3280,6 +3298,7 @@ GameObject:
   - component: {fileID: 1081749083}
   - component: {fileID: 1081749087}
   - component: {fileID: 1081749086}
+  - component: {fileID: 1081749088}
   m_Layer: 5
   m_Name: BackgroundOverScreen
   m_TagString: Untagged
@@ -3476,6 +3495,22 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &1081749088
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1081749081}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c3f7c9fcc699e57489a67c175af3a18a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GameEndSfx
+  sfxPlayer: {fileID: 1897688078}
+  winClip: {fileID: 8300000, guid: aba3303568d23a44e8e34645b4d979a2, type: 3}
+  loseClip: {fileID: 8300000, guid: ce0df0b3466a43c418f7b4145448606b, type: 3}
+  playOncePerShow: 1
 --- !u!1 &1081986830
 GameObject:
   m_ObjectHideFlags: 0
@@ -4671,7 +4706,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 2083304699}
         m_TargetAssemblyTypeName: PauseOverlay, Assembly-CSharp
         m_MethodName: Pause
         m_Mode: 1
