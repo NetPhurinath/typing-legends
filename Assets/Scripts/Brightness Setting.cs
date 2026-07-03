@@ -34,21 +34,30 @@ public class BrightnessSetting : MonoBehaviour
 
  private static BrightnessSetting instance;
 
- private void Awake()
- {
- // Singleton-style persistence.
- if (instance != null && instance != this)
- {
- Destroy(gameObject);
- return;
- }
+    private void Awake()
+    {
+        if (instance != null && instance != this)
+        {
+            if (brightnessSlider != null)
+            {
+                instance.brightnessSlider = brightnessSlider;
 
- instance = this;
- DontDestroyOnLoad(gameObject);
+                // Re-wire the slider's OnValueChanged to the surviving instance
+                brightnessSlider.onValueChanged.RemoveAllListeners();
+                brightnessSlider.onValueChanged.AddListener(instance.ChangeBrightness);
 
- EnsureOverlayExists();
- EnsureOverlayDoesNotBlockInput();
- }
+                instance.RefreshFromPrefs();
+            }
+
+            Destroy(gameObject);
+            return;
+        }
+
+        instance = this;
+        DontDestroyOnLoad(gameObject);
+        EnsureOverlayExists();
+        EnsureOverlayDoesNotBlockInput();
+    }
 
  private void OnEnable()
  {
@@ -93,7 +102,13 @@ public class BrightnessSetting : MonoBehaviour
  ApplySavedBrightness();
  }
 
- private void EnsureOverlayDoesNotBlockInput()
+// Runtime listener overload (called when slider is re-wired via code)
+public void ChangeBrightness(float value)
+{
+    ChangeBrightness();
+}
+
+    private void EnsureOverlayDoesNotBlockInput()
  {
  if (dimOverlayImage == null) return;
 

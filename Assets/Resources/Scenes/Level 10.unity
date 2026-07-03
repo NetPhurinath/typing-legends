@@ -466,7 +466,7 @@ MonoBehaviour:
   pointsPerWord: 50
   countdownTime: 10
   playerHealth: {fileID: 336865968}
-  monsterHealth: {fileID: 0}
+  monsterHealth: {fileID: 1811837678}
   monsterDamagePerCorrectWord: 1
   monsterPortraitUI: {fileID: 0}
   slowWordDamage: 1
@@ -726,7 +726,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
+      - m_Target: {fileID: 903262885}
         m_TargetAssemblyTypeName: GoToLevelSelection, Assembly-CSharp
         m_MethodName: ReturnToLevelSelection
         m_Mode: 1
@@ -2915,8 +2915,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Resume
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: fa28e5483a23d89409d10ce68815e80e, type: 2}
-  m_sharedMaterial: {fileID: 1892586903641787009, guid: fa28e5483a23d89409d10ce68815e80e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -3457,6 +3457,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: e5c333452697cb44abaa22f1eb897de2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1811837675}
+    - targetCorrespondingSourceObject: {fileID: -8653719598885068355, guid: e5c333452697cb44abaa22f1eb897de2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1811837678}
   m_SourcePrefab: {fileID: 4843985084834002234, guid: e5c333452697cb44abaa22f1eb897de2, type: 3}
 --- !u!1 &745773635
 GameObject:
@@ -4622,8 +4625,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: Level
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: fa28e5483a23d89409d10ce68815e80e, type: 2}
-  m_sharedMaterial: {fileID: 1892586903641787009, guid: fa28e5483a23d89409d10ce68815e80e, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -5899,7 +5902,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: cc7a5029beb08eb43902e402e22450eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MonsterHeartUI
-  monsterHealth: {fileID: 0}
+  monsterHealth: {fileID: 1811837678}
   hearts:
   - {fileID: 1862389777}
   - {fileID: 1340899138}
@@ -7656,6 +7659,23 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1811837678
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1811837674}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b94b45cbe0840bd4f847293872010e76, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MonsterHealth
+  maxHealth: 5
+  gameOverScreen: {fileID: 1081749083}
+  typer: {fileID: 203963479}
+  portraitUI: {fileID: 0}
+  sfxPlayer: {fileID: 0}
 --- !u!1 &1821548665
 GameObject:
   m_ObjectHideFlags: 0
