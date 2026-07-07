@@ -42,4 +42,17 @@ public class Timer : MonoBehaviour
             timerText.text = "Time: " + Mathf.Ceil(timeRemaining).ToString();
         }
     }
+
+    public void AddTime(float amount)
+    {
+        if (isGameOver) return;
+        if (amount <= 0f) return;
+
+        timeRemaining += amount;
+
+        if (timerText != null)
+        {
+            timerText.text = "Time: " + Mathf.Ceil(timeRemaining).ToString();
+        }
+    }
 }

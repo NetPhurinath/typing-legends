@@ -11,30 +11,12 @@ public class Typer : MonoBehaviour
     public TMP_Text wordOutput = null;
     public TMP_Text pointOutput = null;
     public TMP_Text timerOutput = null;
-    public void OnFoodIconClicked()
-    {
-        ConsumeFood();
-    }
+   
 
     [SerializeField] private GameOverScreen gameOverScreen = null;
     [SerializeField] private GameWinScreen gameWinScreen = null;
-    [Header("Food Icon")]
-    [SerializeField] private GameObject foodIcon;
+   
 
-    [Header("Item (tomyumshrimp)")]
-    [SerializeField] private TomyumShrimpItem tomyumShrimpItem;
-
-    [Header("Food")]
-    [SerializeField] private int maxFood =3;
-
-    // Kept for backwards compatibility / UI balancing. If an item is assigned,
-    // the item's own healAmount will be used.
-    [SerializeField] private int healPerFood =1;
-
-    [Header("Food UI")]
-    [SerializeField] private TMP_Text foodOutput;
-
-    private int currentFood =0;
 
     private string remainingWord = string.Empty;
     private string currentWord = string.Empty;
@@ -68,6 +50,9 @@ public class Typer : MonoBehaviour
     [Header("Time limit damage")]
     [SerializeField] private int slowWordDamage =1;
 
+    [Header("Rewards (optional)")]
+    [SerializeField] private RewardManager rewardManager;
+
     private void Awake()
     {
         if (gameWinScreen == null)
@@ -90,8 +75,12 @@ public class Typer : MonoBehaviour
         if (monsterPortraitUI == null)
             monsterPortraitUI = Object.FindFirstObjectByType<MonsterPortraitUI>(FindObjectsInactive.Include);
 
-        if (tomyumShrimpItem == null)
-            tomyumShrimpItem = Object.FindFirstObjectByType<TomyumShrimpItem>(FindObjectsInactive.Include);
+        if (rewardManager == null)
+            rewardManager = GetComponent<RewardManager>();
+
+        if (rewardManager == null)
+            rewardManager = Object.FindFirstObjectByType<RewardManager>(FindObjectsInactive.Include);
+
     }
 
     private void Start()
@@ -99,9 +88,7 @@ public class Typer : MonoBehaviour
         ResolveWordbankProvider();
         SetCurrentWord();
         UpdatePointDisplay();
-        UpdateFoodDisplay();
         ResetTimer();
-        AddFood(3);
 
         ScoreKeeper.Set(score);
     }
@@ -111,10 +98,7 @@ public class Typer : MonoBehaviour
         if (isGameOver) return;
         CheckInput();
         UpdateTimer();
-        if (Input.GetKeyDown(KeyCode.H) && !IsHealthFull())
-        {
-            ConsumeFood();
-        }
+        
     }
 
     private void SetCurrentWord()
@@ -442,10 +426,28 @@ public class Typer : MonoBehaviour
         SetCurrentWord();
     }
 
+    public bool SkipCurrentWord()
+    {
+        if (isGameOver) return false;
+        if (string.IsNullOrEmpty(currentWord)) return false;
+
+        SetCurrentWord();
+        return true;
+    }
+
     private void UpdateTimerDisplay()
     {
         if (timerOutput != null)
             timerOutput.text = "Time: " + Mathf.Ceil(timer).ToString();
+    }
+
+    public void AddTime(float amount)
+    {
+        if (isGameOver) return;
+        if (amount <= 0f) return;
+
+        timer += amount;
+        UpdateTimerDisplay();
     }
 
     private void ReturnToMainMenu()
@@ -455,6 +457,18 @@ public class Typer : MonoBehaviour
 
     private void Win()
     {
+        if (rewardManager != null)
+        {
+            Debug.Log("RewardManager Found");
+            rewardManager.GrantLevelReward();
+        }
+        else
+        {
+            Debug.Log("RewardManager NULL");
+        }
+        if (rewardManager != null)
+            rewardManager.GrantLevelReward();
+
         ScoreKeeper.Set(score);
         if (gameWinScreen != null)
         {
@@ -477,49 +491,9 @@ public class Typer : MonoBehaviour
         return playerHealth.CurrentHealth >= playerHealth.MaxHealth;
     }
 
-    private void ConsumeFood()
-    {
-        if (playerHealth == null) return;
-        if (currentFood <=0) return;
-        if (IsHealthFull()) return;
+   
 
-        currentFood--;
+    
 
-        // Prefer the separated item behaviour when present.
-        if (tomyumShrimpItem != null)
-        {
-            // If for some reason the item refuses to use, fall back.
-            if (!tomyumShrimpItem.TryUse(playerHealth))
-                playerHealth.Heal(healPerFood);
-        }
-        else
-        {
-            playerHealth.Heal(healPerFood);
-        }
-
-        UpdateFoodDisplay();
-        UpdateFoodIcon();
-    }
-
-    private void UpdateFoodIcon()
-    {
-        if (foodIcon == null) return;
-
-        foodIcon.SetActive(currentFood > 0);
-    }
-
-    private void AddFood(int amount)
-    {
-        if (amount <= 0) return;
-
-        currentFood = Mathf.Min(maxFood, currentFood + amount);
-        UpdateFoodDisplay();
-        UpdateFoodIcon();
-    }
-
-    private void UpdateFoodDisplay()
-    {
-        if (foodOutput != null)
-            foodOutput.text = currentFood.ToString();
-    }
+    
 }
