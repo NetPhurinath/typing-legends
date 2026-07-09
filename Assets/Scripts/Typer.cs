@@ -8,6 +8,10 @@ public class Typer : MonoBehaviour
     public Wordbank wordbank = null;
     [Header("Wordbank (any WordbankX)")]
     [SerializeField] private MonoBehaviour wordbankBehaviour = null;
+    [Header("Strategy profiling (optional)")]
+    [SerializeField] private TypingStrategyProfiler strategyProfiler = null;
+    [Header("Raw event logging (optional)")]
+    [SerializeField] private RawTypingEventLogger rawEventLogger = null;
     public TMP_Text wordOutput = null;
     public TMP_Text pointOutput = null;
     public TMP_Text timerOutput = null;
@@ -92,6 +96,18 @@ public class Typer : MonoBehaviour
 
         if (tomyumShrimpItem == null)
             tomyumShrimpItem = Object.FindFirstObjectByType<TomyumShrimpItem>(FindObjectsInactive.Include);
+
+        if (strategyProfiler == null)
+            strategyProfiler = TypingStrategyProfiler.Instance;
+
+        if (strategyProfiler == null)
+            strategyProfiler = Object.FindFirstObjectByType<TypingStrategyProfiler>(FindObjectsInactive.Include);
+
+        if (rawEventLogger == null)
+            rawEventLogger = RawTypingEventLogger.Instance;
+
+        if (rawEventLogger == null)
+            rawEventLogger = Object.FindFirstObjectByType<RawTypingEventLogger>(FindObjectsInactive.Include);
     }
 
     private void Start()
@@ -138,6 +154,12 @@ public class Typer : MonoBehaviour
 
         SetRemainingWord(currentWord);
         ResetTimer();
+
+        if (rawEventLogger != null)
+            rawEventLogger.LogAttemptStarted(currentWord, countdownTime);
+
+        if (strategyProfiler != null)
+            strategyProfiler.BeginAttempt(currentWord, countdownTime);
 
         InvokeOnWordStarted(currentWord);
     }
@@ -281,6 +303,12 @@ public class Typer : MonoBehaviour
             ? Mathf.Clamp(countdownTime - timer, 0.01f, countdownTime)
             : Mathf.Max(0.01f, countdownTime);
 
+        if (rawEventLogger != null)
+            rawEventLogger.LogAttemptEnded(completed, timeTakenSeconds, mistakesThisWord, typedCount, currentWord);
+
+        if (strategyProfiler != null)
+            strategyProfiler.CompleteAttempt(completed, timeTakenSeconds, mistakesThisWord);
+
         InvokeOnWordResult(currentWord, timeTakenSeconds, mistakesThisWord, completed);
     }
 
@@ -333,7 +361,20 @@ public class Typer : MonoBehaviour
 
     private void EnterLetter(string typedLetter)
     {
-        if (IsCorrectLetter(typedLetter))
+        bool isCorrect = IsCorrectLetter(typedLetter);
+
+        char typedChar = !string.IsNullOrEmpty(typedLetter) ? typedLetter[0] : '\0';
+        char expectedChar = (!string.IsNullOrEmpty(remainingWord) && typedCount < remainingWord.Length)
+            ? remainingWord[typedCount]
+            : '\0';
+
+        if (rawEventLogger != null)
+            rawEventLogger.LogKeyPress(typedChar, expectedChar, typedCount, isCorrect, mistakesThisWord);
+
+        if (strategyProfiler != null)
+            strategyProfiler.RegisterKeyPress(isCorrect);
+
+        if (isCorrect)
         {
             RemoveLetter();
 
@@ -489,11 +530,19 @@ public class Typer : MonoBehaviour
         if (tomyumShrimpItem != null)
         {
             // If for some reason the item refuses to use, fall back.
-            if (!tomyumShrimpItem.TryUse(playerHealth))
+            bool success = tomyumShrimpItem.TryUse(playerHealth);
+
+            if (rawEventLogger != null)
+                rawEventLogger.LogItemUsed(tomyumShrimpItem.ItemName, success, currentWord);
+
+            if (!success)
                 playerHealth.Heal(healPerFood);
         }
         else
         {
+            if (rawEventLogger != null)
+                rawEventLogger.LogItemUsed("food", true, currentWord);
+
             playerHealth.Heal(healPerFood);
         }
 

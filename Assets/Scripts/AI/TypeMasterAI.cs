@@ -9,10 +9,16 @@ public class TypeMasterAI : MonoBehaviour
     [Tooltip("การตั้งค่าเกณฑ์ปรับระดับ: เปลี่ยนตรงนี้ = เปลี่ยนความเร็ว/ความแม่นยำที่ใช้เลื่อนขึ้น-ลง")]
     [SerializeField] private TypeMasterAIDifficultySettings difficulty;
 
+    [Tooltip("สัญญาณพฤติกรรมจากเกมพิมพ์: ถ้ามี จะใช้ช่วยปรับเกณฑ์เลื่อนระดับแบบอ่อน ๆ")]
+    [SerializeField] private TypingStrategyProfiler strategyProfiler;
+
     [Header("Debug (อ่านอย่างเดียว)")]
     [SerializeField] private int currentTierIndex = 0;
     [SerializeField] private float emaWpm = 0f;
     [SerializeField, Range(0f, 1f)] private float emaAccuracy = 1f;
+    [SerializeField, Range(0f, 1f)] private float strategyPlanningBias = 0f;
+    [SerializeField, Range(0f, 1f)] private float strategyMonitoringBias = 0f;
+    [SerializeField, Range(0f, 1f)] private float strategyTrialAndErrorBias = 0f;
 
     private int promoteCounter = 0;
     private int demoteCounter = 0;
@@ -25,6 +31,7 @@ public class TypeMasterAI : MonoBehaviour
     {
         if (wordbankTiers == null) wordbankTiers = GetComponent<TypeMasterAIWordbankTiers>();
         if (difficulty == null) difficulty = GetComponent<TypeMasterAIDifficultySettings>();
+        if (strategyProfiler == null) strategyProfiler = Object.FindFirstObjectByType<TypingStrategyProfiler>(FindObjectsInactive.Include);
 
         if (wordbankTiers == null)
             Debug.LogError("TypeMasterAI: ต้องมีคอมโพเนนต์ TypeMasterAIWordbankTiers อยู่ด้วย");
@@ -97,8 +104,15 @@ public class TypeMasterAI : MonoBehaviour
         bool canPromote = currentTierIndex < 9;
         bool canDemote = currentTierIndex > 0;
 
-        bool promote = canPromote && emaWpm >= rule.promoteWpm && emaAccuracy >= rule.promoteAccuracy;
-        bool demote = canDemote && (emaWpm <= rule.demoteWpm || emaAccuracy <= rule.demoteAccuracy);
+        UpdateStrategyBias();
+
+        float promoteWpmThreshold = ApplyPlanningBias(rule.promoteWpm);
+        float promoteAccuracyThreshold = ApplyPlanningAccuracyBias(rule.promoteAccuracy);
+        float demoteWpmThreshold = ApplyTrialAndErrorWpmBias(rule.demoteWpm);
+        float demoteAccuracyThreshold = ApplyTrialAndErrorAccuracyBias(rule.demoteAccuracy);
+
+        bool promote = canPromote && emaWpm >= promoteWpmThreshold && emaAccuracy >= promoteAccuracyThreshold;
+        bool demote = canDemote && (emaWpm <= demoteWpmThreshold || emaAccuracy <= demoteAccuracyThreshold);
 
         if (promote)
         {
@@ -130,6 +144,45 @@ public class TypeMasterAI : MonoBehaviour
             promoteCounter = 0;
             demoteCounter = 0;
         }
+    }
+
+    private void UpdateStrategyBias()
+    {
+        if (strategyProfiler == null)
+        {
+            strategyPlanningBias = 0f;
+            strategyMonitoringBias = 0f;
+            strategyTrialAndErrorBias = 0f;
+            return;
+        }
+
+        strategyPlanningBias = Mathf.Clamp01(strategyProfiler.PlanningScore);
+        strategyMonitoringBias = Mathf.Clamp01(strategyProfiler.MonitoringScore);
+        strategyTrialAndErrorBias = Mathf.Clamp01(strategyProfiler.TrialAndErrorScore);
+    }
+
+    private float ApplyPlanningBias(float threshold)
+    {
+        float easing = Mathf.Lerp(1f, 0.9f, strategyPlanningBias);
+        return Mathf.Max(0f, threshold * easing);
+    }
+
+    private float ApplyPlanningAccuracyBias(float threshold)
+    {
+        float easing = Mathf.Lerp(0f, 0.03f, strategyPlanningBias);
+        return Mathf.Clamp01(threshold - easing);
+    }
+
+    private float ApplyTrialAndErrorWpmBias(float threshold)
+    {
+        float tightening = Mathf.Lerp(1f, 1.15f, strategyTrialAndErrorBias);
+        return Mathf.Max(0f, threshold * tightening);
+    }
+
+    private float ApplyTrialAndErrorAccuracyBias(float threshold)
+    {
+        float tightening = Mathf.Lerp(0f, 0.05f, strategyTrialAndErrorBias);
+        return Mathf.Clamp01(threshold + tightening);
     }
 
     private static float UpdateEma(float previous, float sample, float alpha)
