@@ -15,10 +15,14 @@ public class PlayerHealth : MonoBehaviour
     [SerializeField] private SfxPlayer sfxPlayer;
 
     private int currentHealth;
+    private int shieldCount;
     private bool isDead;
 
     public int CurrentHealth => currentHealth;
     public int MaxHealth => maxHealth;
+    public int ShieldCount => shieldCount;
+
+    public event Action ShieldChanged;
 
     public event Action<int, int> HealthChanged; // current, max
 
@@ -52,13 +56,34 @@ public class PlayerHealth : MonoBehaviour
     {
         isDead = false;
         currentHealth = maxHealth;
+        shieldCount = 0;
         HealthChanged?.Invoke(currentHealth, maxHealth);
+        ShieldChanged?.Invoke();
+    }
+
+    public void AddShield(int amount)
+    {
+        if (isDead) return;
+        if (amount <= 0) return;
+
+        // มีโล่อยู่แล้ว ไม่ให้เพิ่ม
+        if (shieldCount > 0) return;
+
+        shieldCount = 1;
+        ShieldChanged?.Invoke();
     }
 
     public void TakeDamage(int amount)
     {
         if (isDead) return;
         if (amount <= 0) return;
+
+        if (shieldCount > 0)
+        {
+            shieldCount--;
+            ShieldChanged?.Invoke();
+            return;
+        }
 
         currentHealth -= amount;
         if (sfxPlayer != null) sfxPlayer.PlayMonsterHitPlayer();

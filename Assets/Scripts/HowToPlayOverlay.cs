@@ -37,6 +37,16 @@ public class HowToPlayOverlay : MonoBehaviour
     private CanvasGroup canvasGroup;
     private int currentPageIndex;
 
+    [SerializeField] private bool openOnStart = true;
+
+    private void Start()
+    {
+    if (PlayerPrefs.GetInt("HowToPlayShown", 0) == 0)
+    {
+        Open();
+    }
+    }
+
     private void Awake()
     {
         canvasGroup = GetComponent<CanvasGroup>();
@@ -69,6 +79,7 @@ public class HowToPlayOverlay : MonoBehaviour
     {
         SetPanelVisible(false);
         if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
+        PlayerPrefs.SetInt("HowToPlayShown", 1);
     }
 
     public void NextPage()

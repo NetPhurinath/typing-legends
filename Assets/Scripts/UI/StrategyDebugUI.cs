@@ -28,7 +28,7 @@ public class StrategyDebugUI : MonoBehaviour
 
         ConfigureText();
 
-        ApplyVisibility(true);
+        ApplyVisibility(false);
     }
 
     private void Update()
@@ -75,7 +75,7 @@ public class StrategyDebugUI : MonoBehaviour
         if (debugText == null)
             return;
 
-        debugText.enableWordWrapping = true;
+        debugText.textWrappingMode = TextWrappingModes.Normal;
         debugText.overflowMode = TextOverflowModes.Overflow;
         debugText.alignment = TextAlignmentOptions.TopLeft;
         debugText.enableAutoSizing = false;
