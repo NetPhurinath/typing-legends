@@ -57,6 +57,9 @@ public class Typer : MonoBehaviour
     [Header("Rewards (optional)")]
     [SerializeField] private RewardManager rewardManager;
 
+    [Header("AI (optional)")]
+    [SerializeField] private DynamicPacingAI dynamicPacingAI;
+
     private void Awake()
     {
         if (gameWinScreen == null)
@@ -84,6 +87,12 @@ public class Typer : MonoBehaviour
 
         if (rewardManager == null)
             rewardManager = Object.FindFirstObjectByType<RewardManager>(FindObjectsInactive.Include);
+
+        if (dynamicPacingAI == null)
+            dynamicPacingAI = GetComponent<DynamicPacingAI>();
+
+        if (dynamicPacingAI == null)
+            dynamicPacingAI = Object.FindFirstObjectByType<DynamicPacingAI>(FindObjectsInactive.Include);
     }
 
     private void Start()
@@ -239,6 +248,13 @@ public class Typer : MonoBehaviour
     private void InvokeOnWordStarted(string word)
     {
         if (string.IsNullOrEmpty(word)) return;
+
+        // Call DynamicPacingAI if assigned
+        if (dynamicPacingAI != null && dynamicPacingAI.gameObject.activeInHierarchy)
+        {
+            dynamicPacingAI.OnWordStarted(word);
+        }
+
         if (resolvedWordbank == null) return;
 
         if (resolvedWordbank is AdaptiveWordbankAI adaptive)
@@ -254,6 +270,13 @@ public class Typer : MonoBehaviour
     private void InvokeOnWordResult(string word, float timeTakenSeconds, int mistakes, bool completed)
     {
         if (string.IsNullOrEmpty(word)) return;
+
+        // Call DynamicPacingAI if assigned
+        if (dynamicPacingAI != null && dynamicPacingAI.gameObject.activeInHierarchy)
+        {
+            dynamicPacingAI.OnWordResult(word, timeTakenSeconds, mistakes, completed);
+        }
+
         if (resolvedWordbank == null) return;
 
         if (resolvedWordbank is AdaptiveWordbankAI adaptive)
