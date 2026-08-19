@@ -434,19 +434,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::Typer
   wordbank: {fileID: 0}
   wordbankBehaviour: {fileID: 2072567514}
+  strategyProfiler: {fileID: 0}
+  rawEventLogger: {fileID: 0}
   wordOutput: {fileID: 1081986832}
   pointOutput: {fileID: 1394781970}
   timerOutput: {fileID: 789694824}
   gameOverScreen: {fileID: 0}
   gameWinScreen: {fileID: 0}
   pointsPerWord: 50
-  countdownTime: 5
+  countdownTime: 10
   playerHealth: {fileID: 1399919854}
   monsterHealth: {fileID: 766983549}
   monsterDamagePerCorrectWord: 1
   monsterPortraitUI: {fileID: 0}
   slowWordDamage: 1
   rewardManager: {fileID: 0}
+  dynamicPacingAI: {fileID: 0}
 --- !u!4 &203963480
 Transform:
   m_ObjectHideFlags: 0
