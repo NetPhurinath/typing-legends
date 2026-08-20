@@ -781,7 +781,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodInventory
   playerHealth: {fileID: 1210336530}
   typer: {fileID: 0}
-  maxFood: 3
+  maxFood: 4
+  maxShield: 4
+  maxTime: 4
+  maxSkipWord: 4
   healPerFood: 1
   shieldPerUse: 1
   timeBonusSeconds: 5

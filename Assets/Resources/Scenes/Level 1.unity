@@ -1117,7 +1117,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::FoodInventory
   playerHealth: {fileID: 935324607}
   typer: {fileID: 0}
-  maxFood: 3
+  maxFood: 4
+  maxShield: 4
+  maxTime: 4
+  maxSkipWord: 4
   healPerFood: 1
   shieldPerUse: 1
   timeBonusSeconds: 5
@@ -5159,8 +5162,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.0025634766, y: 281.18}
-  m_SizeDelta: {x: 855.8, y: 237.65}
+  m_AnchoredPosition: {x: 1.41, y: 281.18}
+  m_SizeDelta: {x: 1271.19, y: 237.65}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1081986832
 MonoBehaviour:

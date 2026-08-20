@@ -16,10 +16,19 @@ public class FoodInventory : MonoBehaviour
     [SerializeField] private Typer typer;
 
     [Header("Food")]
-    [SerializeField] private int maxFood = 3;
+    [SerializeField] private int maxFood = 4;
+   
+    [SerializeField] private int maxShield = 4;
+
+    [SerializeField] private int maxTime = 4;
+
+    [SerializeField] private int maxSkipWord = 4;
+
     [SerializeField] private int healPerFood = 1;
     [SerializeField] private int shieldPerUse = 1;
     [SerializeField] private float timeBonusSeconds = 5f;
+  
+
     
 
     [Header("Food UI")]
@@ -102,12 +111,19 @@ public class FoodInventory : MonoBehaviour
             typer = FindFirstObjectByType<Typer>();
     }
 
-    private void Start()
+        private void Start()
     {
-        AddItem(ItemType.Food, startFood);
-        AddItem(ItemType.Shield, startShield);
-        AddItem(ItemType.Time, startTime);
-        AddItem(ItemType.SkipWord, startSkipWord);
+        if (GetItemCount(ItemType.Food) == 0)
+            AddItem(ItemType.Food, startFood);
+
+        if (GetItemCount(ItemType.Shield) == 0)
+            AddItem(ItemType.Shield, startShield);
+
+        if (GetItemCount(ItemType.Time) == 0)
+            AddItem(ItemType.Time, startTime);
+
+        if (GetItemCount(ItemType.SkipWord) == 0)
+            AddItem(ItemType.SkipWord, startSkipWord);
 
         RefreshAllUI();
     }
@@ -138,17 +154,31 @@ public class FoodInventory : MonoBehaviour
         return items.TryGetValue(type, out int count) ? count : 0;
     }
 
-    public void AddItem(ItemType type, int amount = 1)
+            public void AddItem(ItemType type, int amount = 1)
     {
         if (amount <= 0) return;
 
         if (!items.ContainsKey(type))
             items[type] = 0;
 
-        if (type == ItemType.Food)
-            items[type] = Mathf.Min(maxFood, items[type] + amount);
-        else
-            items[type] += amount;
+        switch (type)
+        {
+            case ItemType.Food:
+                items[type] = Mathf.Min(items[type] + amount, maxFood);
+                break;
+
+            case ItemType.Shield:
+                items[type] = Mathf.Min(items[type] + amount, maxShield);
+                break;
+
+            case ItemType.Time:
+                items[type] = Mathf.Min(items[type] + amount, maxTime);
+                break;
+
+            case ItemType.SkipWord:
+                items[type] = Mathf.Min(items[type] + amount, maxSkipWord);
+                break;
+        }
 
         SaveSharedInventory();
         RefreshUI(type);
@@ -262,5 +292,26 @@ public class FoodInventory : MonoBehaviour
             if (skipWordIcon != null)
                 skipWordIcon.SetActive(items[type] > 0);
         }
+    }
+        public bool IsItemFull(ItemType type)
+    {
+        int current = GetItemCount(type);
+
+        switch (type)
+        {
+            case ItemType.Food:
+                return current >= maxFood;
+
+            case ItemType.Shield:
+                return current >= maxShield;
+
+            case ItemType.Time:
+                return current >= maxTime;
+
+            case ItemType.SkipWord:
+                return current >= maxSkipWord;
+        }
+
+        return false;
     }
 }
