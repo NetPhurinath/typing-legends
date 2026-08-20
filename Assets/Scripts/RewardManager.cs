@@ -2,10 +2,10 @@ using UnityEngine;
 
 public class RewardManager : MonoBehaviour
 {
-    private const float NothingChance = 0f;
-    private const float FoodChance = 0.25f;
-    private const float ShieldChance = 0.25f;
-    private const float TimeChance = 0.25f;
+    private const float NothingChance = 0.5f;
+    private const float FoodChance = 0.125f;
+    private const float ShieldChance = 0.125f;
+    private const float TimeChance = 0.125f;
 
     [SerializeField] private FoodInventory inventory;
 
