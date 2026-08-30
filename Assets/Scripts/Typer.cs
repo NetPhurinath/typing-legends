@@ -435,6 +435,24 @@ public class Typer : MonoBehaviour
         UpdateTimerDisplay();
     }
 
+    public void SetCountdownTime(float newTime)
+    {
+        float previousCountdownTime = countdownTime;
+        countdownTime = Mathf.Max(0.5f, newTime);
+
+        if (!string.IsNullOrEmpty(currentWord) && previousCountdownTime > 0f)
+        {
+            float remainingRatio = Mathf.Clamp01(timer / previousCountdownTime);
+            timer = Mathf.Max(0f, countdownTime * remainingRatio);
+        }
+        else
+        {
+            timer = countdownTime;
+        }
+
+        UpdateTimerDisplay();
+    }
+
     private void UpdateTimer()
     {
         timer -= Time.deltaTime;

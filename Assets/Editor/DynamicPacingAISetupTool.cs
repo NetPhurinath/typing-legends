@@ -35,6 +35,11 @@ public class DynamicPacingAISetupTool : EditorWindow
     [MenuItem("Tools/Typing Legends/Setup DynamicPacingAI/Setup All Level Scenes")]
     public static void SetupAllLevelScenes()
     {
+        EditorUtility.DisplayDialog("Warning", "This feature has been disabled to prevent scene corruption.\n\nPlease setup DynamicPacingAI manually:\n1. Open each level scene\n2. Use 'Setup Current Scene' option\n3. Save the scene", "OK");
+        return;
+        
+        /*
+        // DISABLED - Was corrupting scenes. Do not use without proper scene serialization handling.
         string[] sceneGuids = AssetDatabase.FindAssets("t:Scene", new[] { "Assets/Resources/Scenes" });
         int setupCount = 0;
 
@@ -61,6 +66,7 @@ public class DynamicPacingAISetupTool : EditorWindow
         }
 
         EditorUtility.DisplayDialog("Success", $"Setup complete! ตั้งค่า DynamicPacingAI บน {setupCount} scenes", "OK");
+        */
     }
 
     private static void SetupDynamicPacingAI(GameObject targetGameObject)
@@ -83,8 +89,8 @@ public class DynamicPacingAISetupTool : EditorWindow
         pacingAI.recoveryMistakeThreshold = 0.3f;
         pacingAI.burstRequiredStreak = 3;
         
-        pacingAI.timerReducePercentPressure = 0.1f;
-        pacingAI.timerIncreasePercentRecovery = 0.15f;
+        pacingAI.timerReducePercentPressure = 0.2f;
+        pacingAI.timerIncreasePercentRecovery = 0.25f;
         
         // Editor reference assignment
         Typer typer = targetGameObject.GetComponent<Typer>();

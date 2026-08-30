@@ -42,10 +42,10 @@ public class DynamicPacingAI : MonoBehaviour
 
     [Header("ปรับเวลา")]
     [Tooltip("ลดเวลาต่อคำลง % เมื่อ Pressure")]
-    [Range(0f, 0.5f)] public float timerReducePercentPressure = 0.1f;
+    [Range(0f, 0.5f)] public float timerReducePercentPressure = 0.2f;
 
     [Tooltip("เพิ่มเวลาต่อคำ % เมื่อ Recovery")]
-    [Range(0f, 0.5f)] public float timerIncreasePercentRecovery = 0.15f;
+    [Range(0f, 0.5f)] public float timerIncreasePercentRecovery = 0.25f;
 
     [Header("ปรับศัตรู")]
     [Tooltip("ศัตรูโจมตีเร็วกว่านี้เปอร์เซ็นต์ในโหมด Pressure")]
@@ -93,7 +93,7 @@ public class DynamicPacingAI : MonoBehaviour
 
     private void Update()
     {
-        if (strategyProfiler == null || typer == null) return;
+        if (typer == null) return;
 
         UpdateState();
         ApplyPacingEffects();
@@ -101,43 +101,37 @@ public class DynamicPacingAI : MonoBehaviour
 
     private void UpdateState()
     {
-        if (!strategyProfiler.HasSamples)
-        {
-            currentState = PacingState.Normal;
-            consecutiveGoodWords = 0;
-            consecutiveMistakes = 0;
-            return;
-        }
-
-        debugLastWpm = strategyProfiler.LastFirstInputDelay;
-        debugLastAccuracy = strategyProfiler.LastMistakeRate;
-
-        // ใช้ข้อมูลจาก OnWordResult hook สำหรับตัดสินใจ state ใหม่
         PacingState newState = PacingState.Normal;
 
-        // ถ้าพลาดติดกัน 2 ครั้งขึ้นไป ให้เข้า Recovery
-        if (consecutiveMistakes >= 2)
+        float performanceWpm = lastRecordedWpm;
+        float performanceAccuracy = lastRecordedAccuracy;
+
+        // ถ้าพลาดติดกัน 1 ครั้ง ให้เข้า Recovery ทันที
+        if (consecutiveMistakes >= 1)
         {
             newState = PacingState.Recovery;
         }
-        // ถ้าทำดีติดกัน 3 ครั้งขึ้นไป ให้เข้า Burst (สั้น ๆ)
+        // ถ้าทำดีติดกัน 3 ครั้งขึ้นไป ให้เข้า Burst
         else if (consecutiveGoodWords >= burstRequiredStreak)
         {
             newState = PacingState.Burst;
-            // Auto-reset burst counter เพื่อไม่ให้ติด Burst เรื่อย ๆ
             consecutiveGoodWords = 0;
         }
-        // ถ้าผู้เล่นทำได้ดีและพิมพ์เร็ว ให้เข้า Pressure
-        else if (consecutiveGoodWords >= 2 && debugLastAccuracy < recoveryMistakeThreshold && debugLastWpm < 0.15f)
+        // ถ้าผู้เล่นทำได้ดีติดกัน 2 ครั้ง หรือทำงานเร็วแม่นยำตามเกณฑ์ ให้เข้า Pressure
+        else if (consecutiveGoodWords >= 2 || (performanceWpm >= pressureWpmThreshold && performanceAccuracy >= pressureAccuracyThreshold))
         {
             newState = PacingState.Pressure;
+        }
+        else if (performanceAccuracy > 0f && performanceAccuracy < 0.75f)
+        {
+            newState = PacingState.Recovery;
         }
 
         if (newState != currentState)
         {
             currentState = newState;
             stateChangeCounter++;
-            Debug.Log($"DynamicPacingAI: State changed to {currentState} (#{stateChangeCounter}). Good streak: {consecutiveGoodWords}, Mistake streak: {consecutiveMistakes}");
+            Debug.Log($"DynamicPacingAI: State changed to {currentState} (#{stateChangeCounter}). Good streak: {consecutiveGoodWords}, Mistake streak: {consecutiveMistakes}, WPM: {performanceWpm:F1}, Accuracy: {performanceAccuracy:P0}");
         }
     }
 
@@ -167,13 +161,13 @@ public class DynamicPacingAI : MonoBehaviour
 
     private void ResetTimer()
     {
-        typer.countdownTime = originalCountdownTime;
+        typer.SetCountdownTime(originalCountdownTime);
     }
 
     private void ApplyPressure()
     {
         float reducedTime = originalCountdownTime * (1f - timerReducePercentPressure);
-        typer.countdownTime = Mathf.Max(1f, reducedTime);
+        typer.SetCountdownTime(Mathf.Max(1f, reducedTime));
 
         if (monsterHealth != null)
         {
@@ -185,7 +179,7 @@ public class DynamicPacingAI : MonoBehaviour
     private void ApplyRecovery()
     {
         float extendedTime = originalCountdownTime * (1f + timerIncreasePercentRecovery);
-        typer.countdownTime = extendedTime;
+        typer.SetCountdownTime(extendedTime);
 
         if (monsterHealth != null)
         {
@@ -198,7 +192,7 @@ public class DynamicPacingAI : MonoBehaviour
     {
         // Burst = เร่งแบบสั้น ๆ เพื่อให้ตื่นเต้น
         float burstTime = originalCountdownTime * 0.85f;
-        typer.countdownTime = Mathf.Max(1f, burstTime);
+        typer.SetCountdownTime(Mathf.Max(1f, burstTime));
     }
 
     public PacingState CurrentState => currentState;
@@ -219,6 +213,7 @@ public class DynamicPacingAI : MonoBehaviour
             // ผู้เล่นไม่ทันพิมพ์คำให้จบ
             consecutiveMistakes++;
             consecutiveGoodWords = 0;
+            UpdatePerformanceSnapshot(word, timeTakenSeconds, mistakes, completed);
             return;
         }
 
@@ -242,7 +237,32 @@ public class DynamicPacingAI : MonoBehaviour
             consecutiveGoodWords = 0;
         }
 
-        Debug.Log($"DynamicPacingAI: Word '{word}' completed. Good: {consecutiveGoodWords}, Mistakes: {consecutiveMistakes}");
+        UpdatePerformanceSnapshot(word, timeTakenSeconds, mistakes, completed);
+        Debug.Log($"DynamicPacingAI: Word '{word}' completed. Good: {consecutiveGoodWords}, Mistakes: {consecutiveMistakes}, WPM: {lastRecordedWpm:F1}, Accuracy: {lastRecordedAccuracy:P0}");
+    }
+
+    private void UpdatePerformanceSnapshot(string word, float timeTakenSeconds, int mistakes, bool completed)
+    {
+        if (string.IsNullOrEmpty(word))
+        {
+            debugLastWpm = 0f;
+            debugLastAccuracy = 0f;
+            lastRecordedWpm = 0f;
+            lastRecordedAccuracy = 0f;
+            return;
+        }
+
+        int totalChars = Mathf.Max(1, word.Length);
+        float safeSeconds = Mathf.Max(0.25f, timeTakenSeconds);
+        float rawWpm = (totalChars / 5f) / (safeSeconds / 60f);
+        float accuracy = completed
+            ? Mathf.Clamp01(1f - (mistakes / (float)totalChars))
+            : Mathf.Clamp01(1f - (mistakes / (float)Mathf.Max(1, totalChars)));
+
+        lastRecordedWpm = rawWpm;
+        lastRecordedAccuracy = accuracy;
+        debugLastWpm = rawWpm;
+        debugLastAccuracy = accuracy;
     }
 
     /// <summary>
@@ -252,4 +272,28 @@ public class DynamicPacingAI : MonoBehaviour
     {
         // เว้นไว้สำหรับอนาคต เช่น เก็บเวลาเริ่ม หรือทำ VFX
     }
+    //////////////////////////////////////////////////
+    private void OnGUI()
+    {
+        // Debug display บนหน้าจอเพื่อแสดงสถานะ AI
+        GUI.color = Color.white;
+        GUIStyle debugStyle = new GUIStyle(GUI.skin.label);
+        debugStyle.fontSize = 16;
+        debugStyle.richText = true;
+        
+        string timerText = (typer != null) ? typer.countdownTime.ToString("F2") + "s" : "N/A";
+        string originalText = originalCountdownTime.ToString("F2") + "s";
+        
+        string debugInfo = 
+            $"<b>DynamicPacingAI Debug</b>\n" +
+            $"State: <color=yellow>{currentState}</color>\n" +
+            $"Good Streak: {consecutiveGoodWords} | Mistakes: {consecutiveMistakes}\n" +
+            $"WPM: {debugLastWpm:F1} | Accuracy: {debugLastAccuracy:P0}\n" +
+            $"Timer: {timerText} (Original: {originalText})\n" +
+            $"Reduce: -{(timerReducePercentPressure * 100):F0}% | Add: +{(timerIncreasePercentRecovery * 100):F0}%\n" +
+            $"References: StrategyProfiler={(strategyProfiler != null ? "✓" : "✗")}, Typer={(typer != null ? "✓" : "✗")}, MonsterHealth={(monsterHealth != null ? "✓" : "✗")}";
+        
+        GUI.Label(new Rect(10, 10, 500, 150), debugInfo);
+    }
+    ////////////////////////////////////////////////////////
 }
