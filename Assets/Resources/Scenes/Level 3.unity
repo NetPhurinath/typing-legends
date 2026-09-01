@@ -408,6 +408,7 @@ GameObject:
   - component: {fileID: 203963480}
   - component: {fileID: 203963479}
   - component: {fileID: 203963481}
+  - component: {fileID: 203963482}
   m_Layer: 0
   m_Name: Typer
   m_TagString: Untagged
@@ -493,6 +494,34 @@ MonoBehaviour:
   startShield: 0
   startTime: 0
   startSkipWord: 0
+--- !u!114 &203963482
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 203963478}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: af34702c3a094014ab040af4d64f1012, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DynamicPacingAI
+  strategyProfiler: {fileID: 0}
+  typer: {fileID: 0}
+  monsterHealth: {fileID: 0}
+  pressureWpmThreshold: 30
+  pressureAccuracyThreshold: 0.85
+  recoveryMistakeThreshold: 0.3
+  burstRequiredStreak: 3
+  timerReducePercentPressure: 0.2
+  timerIncreasePercentRecovery: 0.25
+  enemyAttackRateMultiplierPressure: 1
+  enemyAttackRateMultiplierRecovery: 0.8
+  currentState: 0
+  consecutiveGoodWords: 0
+  consecutiveMistakes: 0
+  debugLastWpm: 0
+  debugLastAccuracy: 0
 --- !u!1 &222503887
 GameObject:
   m_ObjectHideFlags: 0
