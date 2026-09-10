@@ -1,0 +1,13 @@
+### Health check (no API key required)
+GET http://localhost:3000/
+
+### Generate words (requires API key and API credit)
+POST http://localhost:3000/api/create-practice
+Content-Type: application/json
+
+{
+  "accuracy": 72,
+  "averageTime": 4.8,
+  "mistakes": ["ฤ", "วรรณยุกต์"],
+  "currentLevel": 4
+}

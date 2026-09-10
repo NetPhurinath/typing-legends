@@ -34,6 +34,12 @@ public class Typer : MonoBehaviour
     private float timer;
     private bool isGameOver = false;
 
+    [Header("API words")]
+    [SerializeField] private bool useApiWords = true;
+    [SerializeField] private ApiWordbank apiWordbank;
+    private int apiLevelNumber = 1;
+    private bool readyToPlay;
+
     private object resolvedWordbank = null;
     private MethodInfo resolvedGetWordMethod = null;
     private MethodInfo resolvedOnWordStartedMethod = null;
@@ -95,19 +101,33 @@ public class Typer : MonoBehaviour
             dynamicPacingAI = Object.FindFirstObjectByType<DynamicPacingAI>(FindObjectsInactive.Include);
     }
 
-    private void Start()
+    private System.Collections.IEnumerator Start()
     {
         ResolveWordbankProvider();
+        if (useApiWords)
+        {
+            if (apiWordbank == null) apiWordbank = GetComponent<ApiWordbank>();
+            if (apiWordbank == null) apiWordbank = gameObject.AddComponent<ApiWordbank>();
+            var match = System.Text.RegularExpressions.Regex.Match(gameObject.scene.name, @"^Level\s+(\d+)$");
+            if (match.Success) int.TryParse(match.Groups[1].Value, out apiLevelNumber);
+            while (NextLevelWords.IsPending(apiLevelNumber))
+            {
+                if (wordOutput != null) wordOutput.text = "กำลังเตรียมคำจากผลด่านก่อนหน้า...";
+                yield return null;
+            }
+            apiWordbank.Initialize(apiLevelNumber);
+        }
         SetCurrentWord();
         UpdatePointDisplay();
         ResetTimer();
 
         ScoreKeeper.Set(score);
+        readyToPlay = true;
     }
 
     private void Update()
     {
-        if (isGameOver) return;
+        if (isGameOver || !readyToPlay) return;
         CheckInput();
         UpdateTimer();
         
@@ -142,6 +162,7 @@ public class Typer : MonoBehaviour
             strategyProfiler.BeginAttempt(currentWord, countdownTime);
 
         InvokeOnWordStarted(currentWord);
+        if (useApiWords && apiWordbank != null) apiWordbank.BeginWord();
     }
 
     private bool ResolveWordbankProvider()
@@ -304,10 +325,17 @@ public class Typer : MonoBehaviour
             strategyProfiler.CompleteAttempt(completed, timeTakenSeconds, mistakesThisWord);
 
         InvokeOnWordResult(currentWord, timeTakenSeconds, mistakesThisWord, completed);
+        if (useApiWords && apiWordbank != null)
+            apiWordbank.RecordResult(currentWord, typedCount, mistakesThisWord, completed ? "completed" : "timeout");
     }
 
     private string GetWordFromResolvedProvider()
     {
+        if (useApiWords && apiWordbank != null)
+        {
+            int tier = resolvedWordbank is TypeMasterAI master ? master.CurrentTierIndex : apiLevelNumber - 1;
+            if (apiWordbank.TryTakeWord(apiLevelNumber, tier, currentWord, out var apiWord)) return apiWord;
+        }
         if (resolvedWordbank == null) return string.Empty;
 
         if (resolvedWordbank is Wordbank typedWordbank)
@@ -367,6 +395,8 @@ public class Typer : MonoBehaviour
 
         if (strategyProfiler != null)
             strategyProfiler.RegisterKeyPress(isCorrect);
+
+        if (useApiWords && apiWordbank != null) apiWordbank.RecordKey(expectedChar, isCorrect);
 
         if (isCorrect)
         {
@@ -497,8 +527,11 @@ public class Typer : MonoBehaviour
 
     public bool SkipCurrentWord()
     {
-        if (isGameOver) return false;
+        if (isGameOver || !readyToPlay) return false;
         if (string.IsNullOrEmpty(currentWord)) return false;
+
+        if (useApiWords && apiWordbank != null)
+            apiWordbank.RecordResult(currentWord, typedCount, mistakesThisWord, "skipped");
 
         SetCurrentWord();
         return true;
@@ -526,6 +559,11 @@ public class Typer : MonoBehaviour
 
     private void Win()
     {
+        if (useApiWords && apiWordbank != null)
+        {
+            int nextTier = resolvedWordbank is TypeMasterAI master ? master.CurrentTierIndex : apiLevelNumber;
+            apiWordbank.CompleteLevel(apiLevelNumber + 1, nextTier);
+        }
         if (rewardManager != null)
         {
             Debug.Log("RewardManager Found");
