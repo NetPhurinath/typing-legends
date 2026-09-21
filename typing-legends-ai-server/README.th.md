@@ -1,70 +1,67 @@
-# ทดสอบ Unity → Node.js → OpenAI
+# Unity → Node.js → Gemini 2.5 Flash
 
-เชื่อมเกมจริงแล้ว: ด่านที่มี Typer จะใช้คำจาก API อัตโนมัติ และยังมีฉาก AIPracticeTest สำหรับตรวจเซิร์ฟเวอร์
+เซิร์ฟเวอร์นี้ใช้ Google Gemini API รุ่น `gemini-2.5-flash` สร้างคำสำหรับเกม Typing Legends
+Unity ยังเรียก `POST http://127.0.0.1:3000/api/create-practice` เหมือนเดิม จึงไม่ต้องแก้ URL ในฉาก
 
-## เล่นในด่านจริง
+## การทำงานในเกม
 
-เปิดเซิร์ฟเวอร์ แล้วเปิด `Assets/Resources/Scenes/Level 1.unity` หรือด่านอื่น กด Play และเล่นตามปกติ
-ไม่ต้องกดปุ่มสร้างคำในฉากทดสอบก่อน เกมจะขอครั้งละ 10 คำเมื่อเริ่มเล่น/คิวเหลือน้อย
-ระหว่างรอ ใช้ Wordbank เดิมก่อน เมื่อคำ API พร้อมจะใช้ตั้งแต่คำถัดไป ไม่เปลี่ยนคำกลางการพิมพ์
-Console จะแสดง `รับชุดคำ API สำหรับด่าน ...` และ `ใช้คำจาก API ในเกม: ...`
+1. ระหว่างเล่น ระบบเก็บพฤติกรรมทุกคำในด่าน โดยยังใช้ Wordbank ที่เตรียมไว้สำหรับด่านนั้น
+2. เมื่อชนะ ระบบส่งพฤติกรรมทั้งด่านไป Gemini เพียงหนึ่งครั้ง
+3. Gemini สร้างคำไทย 10 คำสำหรับด่านถัดไป
+4. หากผู้เล่นกด Next ก่อน Gemini ตอบ ด่านถัดไปจะรอคำก่อนเริ่มจับเวลา
+5. คำชุดเดียวกันจะถูกวนใช้ตลอดด่านถัดไป ไม่มีการเรียก API เพิ่มกลางด่าน
+6. ถ้า Gemini ใช้งานไม่ได้ ด่านถัดไปใช้ Wordbank เดิมและเกมยังเล่นต่อได้
 
-ระบบส่งสถิติสูงสุด 20 คำล่าสุด: เปอร์เซ็นต์ตัวอักษรถูก, เวลาเฉลี่ยต่อคำ, อักษรที่ควรพิมพ์แต่พิมพ์ผิด,
-ด่าน และระดับความยาก 0-9 จาก TypeMasterAI (ถ้าด่านใช้ Wordbank โดยตรง ใช้หมายเลขด่านลบหนึ่ง)
-ตอนยังไม่มีผลการเล่น sampleCount จะเป็น 0 ให้โมเดลเริ่มตามระดับ
-TypeMasterAI, PlayerSkillState, StrategyProfiler และ DynamicPacingAI ยังรับผลการเล่นตามเดิม
+ข้อมูลที่ส่งประกอบด้วยผล completed/timeout/skipped ของทุกคำ เวลา การกดแป้น ความแม่นยำ
+อักษรที่ผิดและจำนวนครั้ง first-input delay ช่วงห่างระหว่างแป้น ด่านต้นทาง ด่านเป้าหมาย และระดับความยาก
 
-คำ API อยู่ในคิวหน่วยความจำของ `ApiWordbank` ไม่เขียนทับคลังคำเดิม และไม่เก็บข้ามด่าน
-ขอห่างอย่างน้อย 30 วินาที เมื่อผิดพลาดพัก 60 วินาทีแล้วลองใหม่เมื่อเกมต้องการคำ
-คำผิดรูปแบบหรือ API ล่มจะใช้คลังคำเดิม เกมไม่หยุดและไม่เสียพลังเพราะรอเครือข่าย
-หากต้องการกลับไปใช้คลังเดิมทั้งหมด ปิด `Use Api Words` บน Typer ใน Inspector
+## ส่วนที่ต้องทำเองครั้งเดียว
 
-API endpoint ตั้งได้บน ApiWordbank; โดยปกติ Typer จะเพิ่มคอมโพเนนต์นี้ให้อัตโนมัติเมื่อเริ่มเล่น
-หากต้องการเปลี่ยน endpoint ถาวร ให้เพิ่ม ApiWordbank บน GameObject เดียวกับ Typer แล้วแก้ Endpoint ก่อนกด Play
+1. เข้า [Google AI Studio API Keys](https://aistudio.google.com/api-keys) และล็อกอิน
+2. สร้าง Gemini API key สำหรับโปรเจกต์ของคุณ
+3. เปิดไฟล์ `.env` ในโฟลเดอร์นี้ แล้วใส่คีย์หลังเครื่องหมายเท่ากับ:
 
-## ส่วนที่คุณต้องทำเอง
+```env
+GEMINI_API_KEY=วางคีย์ตรงนี้
+GEMINI_MODEL=gemini-2.5-flash
+PORT=3000
+```
 
-1. ล็อกอิน https://platform.openai.com/ แล้วตั้งค่า Billing/เครดิตสำหรับ API
-2. สร้าง API key ที่ https://platform.openai.com/api-keys ชื่อ `typing-legends-development`
-3. เปิด `.env` ในโฟลเดอร์นี้ ใส่ key หลัง `OPENAI_API_KEY=` แล้วบันทึก ไม่ต้องส่ง key ในแชต
-4. ดับเบิลคลิก `start-server.cmd` แล้วปล่อยหน้าต่างนั้นเปิดไว้ ถ้าเคยเปิดเซิร์ฟเวอร์แล้ว ให้ Ctrl+C และเปิดใหม่หลังแก้ `.env`
-5. ใน Unity เปิด `Assets/Resources/Scenes/AIPracticeTest.unity` กด Play แล้วกด **สร้างชุดฝึกด้วย AI**
-6. เปิด `Window > General > Console` เพื่อดู `คำที่ AI สร้าง: ...`
+บรรทัด `OPENAI_...` เก่าที่อาจยังอยู่ใน `.env` จะไม่ถูกอ่านและลบภายหลังได้ อย่าส่ง API key ในแชตหรือใส่ Git
 
-ถ้าฉากยังไม่ปรากฏหลัง Unity คอมไพล์ ให้ใช้เมนู `Tools > Typing Legends > Create AI Practice Test Scene` เพื่อสร้างฉาก (ไม่เขียนทับฉากที่มีอยู่)
+4. ถ้าเซิร์ฟเวอร์เก่าเปิดอยู่ ให้กด `Ctrl+C` แล้วดับเบิลคลิก `start-server.cmd` ใหม่
+5. ต้องเห็นข้อความ:
 
-## ตรวจเซิร์ฟเวอร์
+```text
+Server running at http://localhost:3000
+AI provider: Google Gemini (gemini-2.5-flash)
+```
+
+## ตรวจการทำงาน
 
 เปิด http://localhost:3000/ ต้องเห็น `Typing Legends AI Server is running`
-หน้านี้ตรวจได้โดยไม่ต้องมี API key และไม่ได้เรียกโมเดล
+หน้านี้ไม่เรียก Gemini และใช้ตรวจว่า Node.js เปิดอยู่เท่านั้น
 
-ทดสอบ API ด้วย PowerShell ในโฟลเดอร์นี้:
+ทดสอบ API โดยใช้ Thunder Client หรือไฟล์ `test-request.http` หรือ PowerShell:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\test-api.ps1
 ```
 
-หรือใช้ Thunder Client: POST `http://localhost:3000/api/create-practice`, Body > JSON แล้วคัดลอก JSON จาก `test-request.http`
+ทดสอบภายในโดยไม่เสียโควตา Gemini:
 
-## ไฟล์ที่เตรียมไว้
+```powershell
+npm test
+```
 
-- `server.js`, `app.js`: เซิร์ฟเวอร์และ endpoint
-- `.env`: key ว่างไว้ให้กรอก; `.gitignore` ป้องกัน key และ node_modules เข้า Git
-- `.env.example`: ตัวอย่างสำหรับย้ายเครื่อง
-- `start-server.cmd`: เปิดเซิร์ฟเวอร์
-- `test-request.http`, `test-api.ps1`: คำขอทดสอบ
-- `app.test.js`: ทดสอบในเครื่องด้วย `npm test` ใช้คำตอบจำลอง ไม่เสียค่า API
-- `../Assets/Scripts/AIPracticeClient.cs`: ส่งข้อมูลตัวอย่างตามขั้นตอน และพิมพ์ผลใน Console
-- `../Assets/Editor/AIPracticeTestSetup.cs`: สร้างฉากพร้อม AI Manager, ปุ่ม TMP ภาษาไทย และ On Click
+## ข้อผิดพลาดที่พบบ่อย
 
-## ข้อผิดพลาดที่อาจเห็นก่อนตั้งค่าบัญชี
+- `GEMINI_API_KEY`: ยังไม่ได้ใส่คีย์ ให้แก้ `.env` และเปิดเซิร์ฟเวอร์ใหม่
+- `401` หรือ `403`: คีย์ไม่ถูกต้อง ไม่มีสิทธิ์ หรือยังไม่ได้เปิด Gemini API ใน Google project
+- `429`: โควตาหมดหรือเรียกถี่เกินไป ตรวจ Dashboard > Usage/Rate limits ใน Google AI Studio
+- ไม่พบโมเดล: ตรวจว่า `GEMINI_MODEL=gemini-2.5-flash`
+- Unity เชื่อมต่อไม่ได้: ตรวจว่า `start-server.cmd` ยังเปิดอยู่และพอร์ต 3000 ว่าง
 
-- `503 / OPENAI_API_KEY`: ยังไม่ได้ใส่ key ให้กรอก `.env` แล้วเปิดใหม่
-- ข้อความ `API key ไม่ถูกต้อง`: ตรวจ key
-- `429`: ตรวจเครดิต/โควตา หรือรอแล้วลองใหม่
-- ไม่พบโมเดล: ตรวจสิทธิ์บัญชีและ `OPENAI_MODEL` แล้วเปิดเซิร์ฟเวอร์ใหม่
-- เชื่อมต่อไม่ได้: ตรวจว่า `start-server.cmd` ยังเปิดอยู่ และพอร์ต 3000 ว่าง
+เซิร์ฟเวอร์รับเฉพาะ `127.0.0.1` สำหรับเกมและ Unity Editor บนเครื่องเดียวกัน
 
-เซิร์ฟเวอร์รับการเชื่อมต่อเฉพาะเครื่องนี้ (127.0.0.1) สำหรับ Unity Editor/เกมบนเครื่องเดียวกัน ยังไม่ได้เตรียมสำหรับ WebGL หรือเครื่องผู้เล่นอื่น
-
-อ้างอิง: [OpenAI quickstart](https://developers.openai.com/api/docs/quickstart), [gpt-5.6-luna](https://developers.openai.com/api/docs/models/gpt-5.6-luna)
+อ้างอิง: [Gemini API keys](https://ai.google.dev/gemini-api/docs/api-key), [Gemini 2.5 Flash](https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash)
