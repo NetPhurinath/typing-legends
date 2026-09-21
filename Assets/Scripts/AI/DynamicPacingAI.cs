@@ -61,6 +61,12 @@ public class DynamicPacingAI : MonoBehaviour
     [SerializeField] private float debugLastWpm = 0f;
     [SerializeField] private float debugLastAccuracy = 0f;
 
+    [Header("Debug Controls")]
+    [Tooltip("Toggle on-screen debug GUI")]
+    [SerializeField] private bool showDebugGUI = false;
+    [Tooltip("If true, debug GUI will only appear in the Editor (not in builds)")]
+    [SerializeField] private bool debugEditorOnly = true;
+
     private float originalCountdownTime;
     private int stateChangeCounter = 0;
     private float lastRecordedWpm = 0f;
@@ -275,6 +281,10 @@ public class DynamicPacingAI : MonoBehaviour
     //////////////////////////////////////////////////
     private void OnGUI()
     {
+        // Hide GUI when disabled or when configured to show only in the Editor but running a build
+        if (!showDebugGUI) return;
+        if (debugEditorOnly && !Application.isEditor) return;
+
         // Debug display บนหน้าจอเพื่อแสดงสถานะ AI
         GUI.color = Color.white;
         GUIStyle debugStyle = new GUIStyle(GUI.skin.label);
@@ -292,8 +302,12 @@ public class DynamicPacingAI : MonoBehaviour
             $"Timer: {timerText} (Original: {originalText})\n" +
             $"Reduce: -{(timerReducePercentPressure * 100):F0}% | Add: +{(timerIncreasePercentRecovery * 100):F0}%\n" +
             $"References: StrategyProfiler={(strategyProfiler != null ? "✓" : "✗")}, Typer={(typer != null ? "✓" : "✗")}, MonsterHealth={(monsterHealth != null ? "✓" : "✗")}";
-        
-        GUI.Label(new Rect(10, 10, 500, 150), debugInfo);
+
+        // Calculate the width of the label to center it
+        float labelWidth = GUI.skin.label.CalcSize(new GUIContent(debugInfo)).x;
+
+        // Set the position for the label to be centered
+        GUI.Label(new Rect((Screen.width - labelWidth) / 2, 10, labelWidth, 100), debugInfo, debugStyle);
     }
     ////////////////////////////////////////////////////////
 }
