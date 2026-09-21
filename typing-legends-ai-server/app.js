@@ -1,11 +1,27 @@
 import express from "express";
 
-export function createApp({ client, model = "gpt-5.6-luna" } = {}) {
+const systemInstruction = "คุณสร้างคำสำหรับเกมพิมพ์ภาษาไทยธีมรามเกียรติ์ สร้างคำไทยที่สะกดถูกต้อง 10 คำไม่ซ้ำกัน คำละ 2-32 ตัวอักษร ใช้เฉพาะอักษรไทย สระ และวรรณยุกต์ ห้ามเว้นวรรค ตัวเลข สัญลักษณ์ หรือแท็ก เลือกความยากตาม difficultyTier (0 ง่ายที่สุด ถึง 9 ยากที่สุด) ถ้าไม่มีให้ใช้ currentLevel (1-10) accuracy เป็นเปอร์เซ็นต์ averageTime เป็นวินาทีต่อคำ mistakes คืออักษรที่ผู้เล่นมักพิมพ์ผิด เน้นฝึกอักษรเหล่านี้โดยไม่เกินความยากที่กำหนด หาก sampleCount เป็น 0 ยังไม่มีสถิติจริง ห้ามตีความว่า averageTime 0 แปลว่าพิมพ์เร็ว ให้เริ่มด้วยคำตามระดับ ข้อมูล sourceLevel และ attempts คือพฤติกรรมตลอดด่านที่เพิ่งจบ currentLevel คือด่านถัดไปที่ต้องสร้างคำ วิเคราะห์ทุกคำทั้ง completed timeout skipped ความถี่อักษรผิด mistakeCounts เวลาเริ่มพิมพ์ firstInputDelay และช่วงห่างแป้น averageKeyInterval เพื่อเลือกคำฝึกสำหรับด่านถัดไป ค่า firstInputDelay -1 หมายถึงไม่ได้เริ่มพิมพ์ ส่งคำทั้ง 10 คำในฟิลด์ words ตาม JSON schema ที่กำหนด ไม่มีคำอธิบาย";
+
+const wordBatchSchema = {
+  type: "object",
+  properties: {
+    words: {
+      type: "array",
+      minItems: 10,
+      maxItems: 10,
+      items: { type: "string", description: "คำภาษาไทยหนึ่งคำ ความยาว 2-32 ตัวอักษร" }
+    }
+  },
+  required: ["words"],
+  additionalProperties: false
+};
+
+export function createApp({ client, model = "gemini-2.5-flash" } = {}) {
   const app = express();
   app.use(express.json({ limit: "2mb" }));
   app.get("/", (_req, res) => res.send("Typing Legends AI Server is running"));
   app.post("/api/create-practice", async (req, res) => {
-    if (!client) return res.status(503).json({ success: false, words: "", error: "ยังไม่ได้ใส่ OPENAI_API_KEY ในไฟล์ .env กรุณาใส่ key แล้วเปิดเซิร์ฟเวอร์ใหม่" });
+    if (!client) return res.status(503).json({ success: false, words: "", error: "ยังไม่ได้ใส่ GEMINI_API_KEY ในไฟล์ .env กรุณาใส่ key แล้วเปิดเซิร์ฟเวอร์ใหม่" });
     const stats = req.body;
     if (!stats || !Number.isFinite(stats.accuracy) || stats.accuracy < 0 || stats.accuracy > 100 ||
         !Number.isFinite(stats.averageTime) || stats.averageTime < 0 ||
@@ -38,33 +54,43 @@ export function createApp({ client, model = "gpt-5.6-luna" } = {}) {
         mistakeCounts: stats.mistakeCounts.map(({ character, count }) => ({ character, count })) };
     }
     try {
-      const response = await client.responses.create({
+      const response = await client.models.generateContent({
         model,
-        instructions: "คุณสร้างคำสำหรับเกมพิมพ์ภาษาไทยธีมรามเกียรติ์ สร้างคำไทยที่สะกดถูกต้อง 10 คำไม่ซ้ำกัน คำละ 2-32 ตัวอักษร ใช้เฉพาะอักษรไทย สระ และวรรณยุกต์ ห้ามเว้นวรรค ตัวเลข สัญลักษณ์ หรือแท็ก เลือกความยากตาม difficultyTier (0 ง่ายที่สุด ถึง 9 ยากที่สุด) ถ้าไม่มีให้ใช้ currentLevel (1-10) accuracy เป็นเปอร์เซ็นต์ averageTime เป็นวินาทีต่อคำ mistakes คืออักษรที่ผู้เล่นมักพิมพ์ผิด เน้นฝึกอักษรเหล่านี้โดยไม่เกินความยากที่กำหนด หาก sampleCount เป็น 0 ยังไม่มีสถิติจริง ห้ามตีความว่า averageTime 0 แปลว่าพิมพ์เร็ว ให้เริ่มด้วยคำตามระดับ ข้อมูล sourceLevel และ attempts คือพฤติกรรมตลอดด่านที่เพิ่งจบ currentLevel คือด่านถัดไปที่ต้องสร้างคำ วิเคราะห์ทุกคำทั้ง completed timeout skipped ความถี่อักษรผิด mistakeCounts เวลาเริ่มพิมพ์ firstInputDelay และช่วงห่างแป้น averageKeyInterval เพื่อเลือกคำฝึกสำหรับด่านถัดไป ค่า firstInputDelay -1 หมายถึงไม่ได้เริ่มพิมพ์ ตอบเป็นคำคั่นด้วยจุลภาคเท่านั้น ไม่มีคำอธิบาย",
-        input: JSON.stringify({ accuracy: stats.accuracy, averageTime: stats.averageTime, mistakes: stats.mistakes, currentLevel: stats.currentLevel,
+        contents: JSON.stringify({ accuracy: stats.accuracy, averageTime: stats.averageTime, mistakes: stats.mistakes, currentLevel: stats.currentLevel,
           ...(stats.difficultyTier !== undefined ? { difficultyTier: stats.difficultyTier } : {}),
-          ...(stats.sampleCount !== undefined ? { sampleCount: stats.sampleCount } : {}), ...stage })
+          ...(stats.sampleCount !== undefined ? { sampleCount: stats.sampleCount } : {}), ...stage }),
+        config: {
+          systemInstruction,
+          temperature: 0.4,
+          maxOutputTokens: 256,
+          thinkingConfig: { thinkingBudget: 0 },
+          responseMimeType: "application/json",
+          responseJsonSchema: wordBatchSchema
+        }
       });
-      const words = response.output_text?.trim();
-      if (!words) return res.status(502).json({ success: false, words: "", error: "โมเดลไม่ได้ส่งข้อความกลับมา กรุณาลองใหม่" });
-      const batch = words.split(/[,，\r\n]+/).map(word => word.trim().normalize("NFC"));
+      const text = response.text?.trim();
+      if (!text) return res.status(502).json({ success: false, words: "", error: "โมเดลไม่ได้ส่งข้อความกลับมา กรุณาลองใหม่" });
+      let generated;
+      try { generated = JSON.parse(text); }
+      catch { return res.status(502).json({ success: false, words: "", error: "โมเดลส่งชุดคำไม่ตรงรูปแบบ เกมจะใช้คำสำรอง" }); }
+      const batch = Array.isArray(generated?.words)
+        ? generated.words.map(word => typeof word === "string" ? word.trim().normalize("NFC") : word)
+        : [];
       if (batch.length !== 10 || new Set(batch).size !== 10 ||
           !batch.every(word => word.length >= 2 && word.length <= 32 && /^[\u0E01-\u0E2E\u0E40-\u0E44][\u0E01-\u0E3A\u0E40-\u0E4E]+$/u.test(word))) {
         return res.status(502).json({ success: false, words: "", error: "โมเดลส่งชุดคำไม่ตรงรูปแบบ เกมจะใช้คำสำรอง" });
       }
       res.json({ success: true, words: batch.join(",") });
     } catch (error) {
-      // Do not log full SDK errors: they can contain request details.
-      console.error("OpenAI request failed:", error.status || "network", error.code || "unknown");
-      const code = error.code || error.error?.code;
-      const quotaExceeded = code === "insufficient_quota" || code === "credit_balance_exhausted" ||
-        error.type === "insufficient_quota" || error.error?.type === "insufficient_quota";
-      const message = error.status === 401 ? "API key ไม่ถูกต้อง ตรวจสอบ .env แล้วเปิดเซิร์ฟเวอร์ใหม่" :
-        error.status === 429 && quotaExceeded ? "เครดิต API ไม่เพียงพอหรือใช้โควตาครบแล้ว (429 insufficient_quota) ตรวจสอบ Billing และ Limits ขององค์กรที่สร้าง API key การรอแล้วกดซ้ำอย่างเดียวไม่แก้สาเหตุนี้" :
-        error.status === 429 && code === "rate_limit_exceeded" ? "เรียก API เกินอัตราที่อนุญาต (429 rate_limit_exceeded) รอสักครู่แล้วลองใหม่ หรือตรวจสอบ Limits ของโมเดล" :
-        error.status === 429 ? "OpenAI ตอบ 429 แต่ไม่ได้ระบุสาเหตุที่รู้จัก ตรวจสอบ Billing และ Limits" :
-        error.status === 404 ? "บัญชีนี้เข้าถึงโมเดลที่ตั้งไว้ไม่ได้ ตรวจสอบ OPENAI_MODEL" :
-        "เรียก OpenAI ไม่สำเร็จ ตรวจสอบการเชื่อมต่อแล้วลองใหม่";
+      // Do not log complete SDK errors because request details may be attached.
+      const status = Number(error.status || error.statusCode || error.code) || 0;
+      const code = String(error.error?.status || error.code || "unknown");
+      console.error("Gemini request failed:", status || "network", code);
+      const message = status === 400 && /API_KEY_INVALID|key/i.test(String(error.message)) ? "Gemini API key ไม่ถูกต้อง ตรวจสอบ GEMINI_API_KEY แล้วเปิดเซิร์ฟเวอร์ใหม่" :
+        status === 401 || status === 403 ? "Gemini API key ไม่มีสิทธิ์ใช้งาน ตรวจสอบ key และเปิด Gemini API ในโปรเจกต์ Google" :
+        status === 429 ? "Gemini ใช้โควตาครบหรือเรียกถี่เกินไป (429) ตรวจสอบ Usage/Rate limits ใน Google AI Studio แล้วลองใหม่" :
+        status === 404 ? "ไม่พบโมเดล Gemini ที่ตั้งไว้ ตรวจสอบ GEMINI_MODEL" :
+        "เรียก Gemini ไม่สำเร็จ ตรวจสอบการเชื่อมต่อแล้วลองใหม่";
       res.status(502).json({ success: false, words: "", error: message });
     }
   });
