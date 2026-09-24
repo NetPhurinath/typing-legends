@@ -7,7 +7,7 @@ const validWords = "ฤดู,ทฤษฎี,สัมฤทธิ์,ประ
 const validResponse = JSON.stringify({ words: validWords.split(",") });
 
 async function withServer(options, run) {
-  const server = createApp(options).listen(0, "127.0.0.1");
+  const server = createApp({ retryDelaysMs: [], ...options }).listen(0, "127.0.0.1");
   await new Promise(resolve => server.once("listening", resolve));
   try { await run(`http://127.0.0.1:${server.address().port}`); }
   finally { await new Promise(resolve => server.close(resolve)); }
@@ -34,9 +34,9 @@ test("health works without credentials; generation explains missing Gemini key",
   });
 });
 
-test("Thai stats and Gemini 2.5 Flash reach the SDK; UTF-8 words reach Unity", async () => {
+test("Thai stats and Gemini 3.6 Flash reach the SDK; UTF-8 words reach Unity", async () => {
   const client = geminiClient({ inspect: input => {
-    assert.equal(input.model, "gemini-2.5-flash");
+    assert.equal(input.model, "gemini-3.6-flash");
     assert.deepEqual(JSON.parse(input.contents), stats);
     assert.equal(input.config.thinkingConfig.thinkingBudget, 0);
     assert.equal(input.config.responseMimeType, "application/json");
@@ -52,7 +52,7 @@ test("Thai stats and Gemini 2.5 Flash reach the SDK; UTF-8 words reach Unity", a
 });
 
 test("Gemini errors are readable and never expose SDK details", async () => {
-  for (const [status, expected] of [[401, /ไม่มีสิทธิ์/], [403, /ไม่มีสิทธิ์/], [429, /โควตา/], [404, /GEMINI_MODEL/], [500, /เรียก Gemini ไม่สำเร็จ/]]) {
+  for (const [status, expected] of [[401, /ไม่มีสิทธิ์/], [403, /ไม่มีสิทธิ์/], [429, /โควตา/], [404, /GEMINI_MODEL/], [503, /ลองใหม่/], [500, /เรียก Gemini ไม่สำเร็จ/]]) {
     const client = geminiClient({ error: Object.assign(new Error("secret-value"), { status }) });
     await withServer({ client }, async base => {
       const response = await post(base, stats);
@@ -98,5 +98,17 @@ test("whole-stage history beyond 20 attempts is forwarded for the next stage", a
     assert.equal((await post(base, body)).status, 200);
     assert.equal((await post(base, { ...body, sampleCount: 34 })).status, 400);
     assert.equal((await post(base, { ...body, currentLevel: 1 })).status, 400);
+  });
+});
+
+test("temporary Gemini overload is retried before failing", async () => {
+  let calls = 0;
+  const client = { models: { generateContent: async () => {
+    if (++calls < 3) throw Object.assign(new Error("overloaded"), { status: 503 });
+    return { text: validResponse };
+  } } };
+  await withServer({ client, retryDelaysMs: [0, 0] }, async base => {
+    assert.deepEqual(await (await post(base, stats)).json(), { success: true, words: validWords });
+    assert.equal(calls, 3);
   });
 });

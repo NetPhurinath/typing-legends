@@ -4599,7 +4599,7 @@ MonoBehaviour:
   pointsFormat: '{0} POINTS'
   winSceneName: Level 2
   autoAdvanceToNextLevelOnWin: 1
-  winNextOverrideSceneName: Level 22
+  winNextOverrideSceneName: 
   nextLevelSceneNameFormat: Level {0}
   restartButtonLabelGameOver: Restart
   restartButtonLabelWin: Next

@@ -1,6 +1,6 @@
-# Unity → Node.js → Gemini 2.5 Flash
+# Unity → Node.js → Gemini 3.6 Flash
 
-เซิร์ฟเวอร์นี้ใช้ Google Gemini API รุ่น `gemini-2.5-flash` สร้างคำสำหรับเกม Typing Legends
+เซิร์ฟเวอร์นี้ใช้ Google Gemini API รุ่น `gemini-3.6-flash` สร้างคำสำหรับเกม Typing Legends
 Unity ยังเรียก `POST http://127.0.0.1:3000/api/create-practice` เหมือนเดิม จึงไม่ต้องแก้ URL ในฉาก
 
 ## การทำงานในเกม
@@ -23,7 +23,7 @@ Unity ยังเรียก `POST http://127.0.0.1:3000/api/create-practice` 
 
 ```env
 GEMINI_API_KEY=วางคีย์ตรงนี้
-GEMINI_MODEL=gemini-2.5-flash
+GEMINI_MODEL=gemini-3.6-flash
 PORT=3000
 ```
 
@@ -34,7 +34,7 @@ PORT=3000
 
 ```text
 Server running at http://localhost:3000
-AI provider: Google Gemini (gemini-2.5-flash)
+AI provider: Google Gemini (gemini-3.6-flash)
 ```
 
 ## ตรวจการทำงาน
@@ -59,9 +59,9 @@ npm test
 - `GEMINI_API_KEY`: ยังไม่ได้ใส่คีย์ ให้แก้ `.env` และเปิดเซิร์ฟเวอร์ใหม่
 - `401` หรือ `403`: คีย์ไม่ถูกต้อง ไม่มีสิทธิ์ หรือยังไม่ได้เปิด Gemini API ใน Google project
 - `429`: โควตาหมดหรือเรียกถี่เกินไป ตรวจ Dashboard > Usage/Rate limits ใน Google AI Studio
-- ไม่พบโมเดล: ตรวจว่า `GEMINI_MODEL=gemini-2.5-flash`
+- ไม่พบโมเดล: ตรวจว่า `GEMINI_MODEL=gemini-3.6-flash`
 - Unity เชื่อมต่อไม่ได้: ตรวจว่า `start-server.cmd` ยังเปิดอยู่และพอร์ต 3000 ว่าง
 
 เซิร์ฟเวอร์รับเฉพาะ `127.0.0.1` สำหรับเกมและ Unity Editor บนเครื่องเดียวกัน
 
-อ้างอิง: [Gemini API keys](https://ai.google.dev/gemini-api/docs/api-key), [Gemini 2.5 Flash](https://ai.google.dev/gemini-api/docs/models/gemini-2.5-flash)
+อ้างอิง: [Gemini API keys](https://ai.google.dev/gemini-api/docs/api-key), [Gemini 3.6 Flash](https://ai.google.dev/gemini-api/docs/models/gemini-3.6-flash)

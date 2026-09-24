@@ -101,7 +101,7 @@ public class Typer : MonoBehaviour
             dynamicPacingAI = Object.FindFirstObjectByType<DynamicPacingAI>(FindObjectsInactive.Include);
     }
 
-    private System.Collections.IEnumerator Start()
+    private void Start()
     {
         ResolveWordbankProvider();
         if (useApiWords)
@@ -110,11 +110,8 @@ public class Typer : MonoBehaviour
             if (apiWordbank == null) apiWordbank = gameObject.AddComponent<ApiWordbank>();
             var match = System.Text.RegularExpressions.Regex.Match(gameObject.scene.name, @"^Level\s+(\d+)$");
             if (match.Success) int.TryParse(match.Groups[1].Value, out apiLevelNumber);
-            while (NextLevelWords.IsPending(apiLevelNumber))
-            {
-                if (wordOutput != null) wordOutput.text = "กำลังเตรียมคำจากผลด่านก่อนหน้า...";
-                yield return null;
-            }
+            // Do not block on a pending AI batch: start with the regular wordbank,
+            // ApiWordbank switches to the AI words as soon as they arrive.
             apiWordbank.Initialize(apiLevelNumber);
         }
         SetCurrentWord();

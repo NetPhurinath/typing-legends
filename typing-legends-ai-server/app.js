@@ -16,7 +16,19 @@ const wordBatchSchema = {
   additionalProperties: false
 };
 
-export function createApp({ client, model = "gemini-2.5-flash" } = {}) {
+// Gemini sometimes answers 500/503 while overloaded; a short retry usually succeeds.
+async function withRetry(delaysMs, call) {
+  for (let attempt = 0; ; attempt++) {
+    try { return await call(); }
+    catch (error) {
+      const status = Number(error.status || error.statusCode || error.code) || 0;
+      if (attempt >= delaysMs.length || (status !== 500 && status !== 503)) throw error;
+      await new Promise(resolve => setTimeout(resolve, delaysMs[attempt]));
+    }
+  }
+}
+
+export function createApp({ client, model = "gemini-3.6-flash", retryDelaysMs = [1000, 3000] } = {}) {
   const app = express();
   app.use(express.json({ limit: "2mb" }));
   app.get("/", (_req, res) => res.send("Typing Legends AI Server is running"));
@@ -54,7 +66,7 @@ export function createApp({ client, model = "gemini-2.5-flash" } = {}) {
         mistakeCounts: stats.mistakeCounts.map(({ character, count }) => ({ character, count })) };
     }
     try {
-      const response = await client.models.generateContent({
+      const response = await withRetry(retryDelaysMs, () => client.models.generateContent({
         model,
         contents: JSON.stringify({ accuracy: stats.accuracy, averageTime: stats.averageTime, mistakes: stats.mistakes, currentLevel: stats.currentLevel,
           ...(stats.difficultyTier !== undefined ? { difficultyTier: stats.difficultyTier } : {}),
@@ -67,7 +79,7 @@ export function createApp({ client, model = "gemini-2.5-flash" } = {}) {
           responseMimeType: "application/json",
           responseJsonSchema: wordBatchSchema
         }
-      });
+      }));
       const text = response.text?.trim();
       if (!text) return res.status(502).json({ success: false, words: "", error: "โมเดลไม่ได้ส่งข้อความกลับมา กรุณาลองใหม่" });
       let generated;
@@ -90,6 +102,7 @@ export function createApp({ client, model = "gemini-2.5-flash" } = {}) {
         status === 401 || status === 403 ? "Gemini API key ไม่มีสิทธิ์ใช้งาน ตรวจสอบ key และเปิด Gemini API ในโปรเจกต์ Google" :
         status === 429 ? "Gemini ใช้โควตาครบหรือเรียกถี่เกินไป (429) ตรวจสอบ Usage/Rate limits ใน Google AI Studio แล้วลองใหม่" :
         status === 404 ? "ไม่พบโมเดล Gemini ที่ตั้งไว้ ตรวจสอบ GEMINI_MODEL" :
+        status === 503 ? "Gemini มีผู้ใช้งานมากเกินไปชั่วคราว (503) กรุณาลองใหม่อีกครั้ง" :
         "เรียก Gemini ไม่สำเร็จ ตรวจสอบการเชื่อมต่อแล้วลองใหม่";
       res.status(502).json({ success: false, words: "", error: message });
     }

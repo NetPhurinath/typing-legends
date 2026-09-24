@@ -49,8 +49,8 @@ public partial class GameOverScreen : MonoBehaviour
     [SerializeField] private bool autoAdvanceToNextLevelOnWin = true;
 
     [Header("Win Next Override (optional)")]
-    [Tooltip("If set, pressing Next on the WIN screen loads this scene directly (e.g. 'Level 22'). Leave empty to use auto-advance/fallback.")]
-    [SerializeField] private string winNextOverrideSceneName = "Level 22";
+    [Tooltip("If set, pressing Next on the WIN screen loads this scene directly (e.g. 'Level 2'). Leave empty to use auto-advance/fallback.")]
+    [SerializeField] private string winNextOverrideSceneName = "";
 
     // รูปแบบชื่อ scene ของด่านถัดไป (ต้องมี {0}) เช่น "Level {0}"
     [SerializeField] private string nextLevelSceneNameFormat = "Level {0}";

@@ -131,7 +131,15 @@ public class ApiWordbank : MonoBehaviour
     public bool TryTakeWord(int levelNumber, int tier, string previousWord, out string word)
     {
         word = null;
-        if (!isActiveAndEnabled || batch.Length == 0) return false;
+        if (!isActiveAndEnabled) return false;
+        if (batch.Length == 0 && NextLevelWords.IsPending(level)) return false;
+        if (batch.Length == 0)
+        {
+            // The batch may finish loading after the stage has already started.
+            batch = NextLevelWords.GetBatch(level);
+            if (batch.Length == 0) return false;
+            Status = "ใช้ชุดคำจากผลด่านก่อนหน้า";
+        }
         // Reuse this fixed batch for the whole stage, including retries; never refill from the API.
         for (int i = 0; i < batch.Length; i++)
         {

@@ -82,6 +82,11 @@ public partial class GameOverScreen
     /// </summary>
     private void EnsureButtonHooks()
     {
+        // Button labels in the scenes are wider than their buttons (505px text on a 250px button),
+        // so the LEVEL label overlapped Next and stole its clicks. Only the button itself should receive clicks.
+        DisableLabelRaycasts(restartButton);
+        DisableLabelRaycasts(mainMenuButton);
+
         // กันการ AddListener ซ้ำ (จะทำให้กด 1 ครั้งแล้วโหลดซ้ำหลายครั้ง)
         if (restartButton != null && !restartHooked)
         {
@@ -116,6 +121,15 @@ public partial class GameOverScreen
     /// - เปลี่ยนพฤติกรรมปุ่ม Next (เช่น ไปหน้าคัดด่าน/ไปด่านถัดไป)
     /// - เพิ่มเอฟเฟกต์/เสียงก่อนโหลดฉาก
     /// </summary>
+    private static void DisableLabelRaycasts(Button button)
+    {
+        if (button == null) return;
+        foreach (var graphic in button.GetComponentsInChildren<Graphic>(true))
+        {
+            if (graphic.gameObject != button.gameObject) graphic.raycastTarget = false;
+        }
+    }
+
     public void OnRestartPressed()
     {
         if (backgroundOverlay != null) backgroundOverlay.SetActive(false);
