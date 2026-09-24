@@ -109,6 +109,10 @@ public partial class GameOverScreen : MonoBehaviour
         if (string.IsNullOrWhiteSpace(winSceneName) || winSceneName == "Level2")
             winSceneName = "LevelSelection";
 
+        // Older scenes serialized a nonexistent "Level 22" override; fall back to auto-advance instead.
+        if (winNextOverrideSceneName == "Level 22")
+            winNextOverrideSceneName = "";
+
         TryAutoWire();
         EnsurePointsText();
 
