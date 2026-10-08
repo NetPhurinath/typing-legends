@@ -7,7 +7,7 @@ using UnityEngine;
 // Collect the entire stage; consume a fixed batch prepared by the previous stage.
 public class ApiWordbank : MonoBehaviour
 {
-    [SerializeField] private string endpoint = "http://127.0.0.1:3000/api/create-practice";
+    [SerializeField] private string endpoint = "https://typing-legends-ai-server.vercel.app/api/create-practice";
     private readonly List<Attempt> attempts = new List<Attempt>();
     private readonly Dictionary<string, int> errorsByCharacter = new Dictionary<string, int>();
     private string[] batch = Array.Empty<string>();

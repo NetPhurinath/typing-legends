@@ -65,3 +65,12 @@ npm test
 เซิร์ฟเวอร์รับเฉพาะ `127.0.0.1` สำหรับเกมและ Unity Editor บนเครื่องเดียวกัน
 
 อ้างอิง: [Gemini API keys](https://ai.google.dev/gemini-api/docs/api-key), [Gemini 3.6 Flash](https://ai.google.dev/gemini-api/docs/models/gemini-3.6-flash)
+
+## Deploy ขึ้น Vercel
+
+1. Push repo ขึ้น GitHub แล้วกด Import ใน Vercel
+2. ตั้ง **Root Directory** เป็น `typing-legends-ai-server` และตั้งชื่อโปรเจกต์เป็น `typing-legends-ai-server`
+3. ใน Settings → Environment Variables ใส่ `GEMINI_API_KEY` (และ `GEMINI_MODEL` ถ้าต้องการเปลี่ยนโมเดล) แล้วกด Redeploy
+4. เกมเรียก `https://typing-legends-ai-server.vercel.app/api/create-practice` ถ้า Vercel ให้ URL อื่น ให้แก้ค่า `endpoint` ใน `AIPracticeClient.cs`, `ApiWordbank.cs` และ Inspector ของ scene
+
+ไฟล์ `api/index.js` เป็นจุดเริ่มสำหรับ Vercel ส่วน `server.js` ยังใช้รันบนเครื่องได้เหมือนเดิม

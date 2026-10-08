@@ -6,7 +6,7 @@ using UnityEngine.Networking;
 
 public class AIPracticeClient : MonoBehaviour
 {
-    [SerializeField] private string endpoint = "http://127.0.0.1:3000/api/create-practice";
+    [SerializeField] private string endpoint = "https://typing-legends-ai-server.vercel.app/api/create-practice";
     private bool isRequesting;
 
     [Serializable]

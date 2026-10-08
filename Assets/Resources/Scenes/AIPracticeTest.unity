@@ -488,7 +488,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41e6e463f1af9d44eada450e6c829299, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AIPracticeClient
-  endpoint: http://127.0.0.1:3000/api/create-practice
+  endpoint: https://typing-legends-ai-server.vercel.app/api/create-practice
 --- !u!4 &1275161228
 Transform:
   m_ObjectHideFlags: 0
